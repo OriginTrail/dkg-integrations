@@ -1,0 +1,24 @@
+{
+  "name": "@origintrail/dkg-integrations-registry",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Schema, validator, and security checks for the official DKG integrations registry.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "security-checks": "node scripts/security-checks.mjs integrations/dkg-hello-world.json integrations/cursor-mcp-dkg.json",
+    "check": "node scripts/validate.mjs && echo \"\\nSchema validation passed.\""
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginTrail/dkg-integrations.git"
+  }
+}

@@ -1,0 +1,9 @@
+# Every registry change requires review from the OriginTrail core-developers team.
+# This keeps the merge gate on the committee's hands rather than any single maintainer.
+
+*                         @OriginTrail/core-developers
+
+# Schema changes need extra care — they change the contract for every contributor.
+/schema/                  @OriginTrail/core-developers
+/scripts/                 @OriginTrail/core-developers
+/.github/workflows/       @OriginTrail/core-developers

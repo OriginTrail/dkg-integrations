@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "your-integration-slug",
+  "name": "Your Integration Name",
+  "description": "One- or two-sentence plain-prose blurb describing what the integration does and for whom. No marketing language; this text shows up verbatim in `dkg integration search`.",
+  "category": ["ingestion", "working-memory"],
+  "maintainer": {
+    "github": "@your-github-handle",
+    "name": "Optional human-readable name",
+    "contact": "Optional email / Discord / other contact"
+  },
+  "repo": "https://github.com/your-handle/your-integration",
+  "commit": "0000000000000000000000000000000000000000",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "memoryLayers": ["WM", "SWM"],
+  "v10PrimitivesUsed": ["ContextGraph", "Assertion"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["generic-HTTP"],
+
+  "install": {
+    "kind": "cli",
+    "package": "@your-handle/your-integration",
+    "version": "0.1.0",
+    "binary": "your-integration",
+    "envRequired": ["DKG_API_URL", "DKG_AUTH_TOKEN"],
+    "usageHint": "Short message printed after install telling the user what command to run next."
+  },
+
+  "security": {
+    "networkEgress": [],
+    "writeAuthority": [
+      "POST /api/assertion/create",
+      "POST /api/assertion/{name}/write"
+    ],
+    "credentialsHandled": [],
+    "notes": "Prose: what third-party services does this integration talk to, what DKG write operations does it perform, does it touch Curator authority (PUBLISH/SHARE), does the npm package have postinstall/preinstall scripts, any other security-relevant details."
+  },
+
+  "trustTier": "community",
+
+  "designBrief": "https://github.com/your-handle/your-integration/blob/main/DESIGN.md",
+  "demo": "https://your-demo-link",
+  "promotionPath": "Describe how Working/Shared artifacts produced by this integration mature toward Verified Memory, and how the integration's outputs are shaped for downstream consumption by context oracles. Required for bounty evaluation (Section 9, criterion 4).",
+  "fitNotes": "Optional: how this integration advances the LLM-Wiki / autoresearch direction (Section 9, criterion 1)."
+}
