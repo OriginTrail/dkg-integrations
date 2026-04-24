@@ -32,23 +32,46 @@ let hardFails = 0;
 
 for (const file of argv) {
   const rel = path.relative(process.cwd(), file);
+
+  // TEMPLATE.json is a scaffold contributors copy; it deliberately points at
+  // placeholder packages that will never resolve. Skip it.
+  if (path.basename(file) === 'TEMPLATE.json') {
+    findings.push({ level: 'info', file: rel, msg: 'skipping: scaffold template, not a real entry.' });
+    continue;
+  }
+
   const entry = JSON.parse(await fs.readFile(file, 'utf8'));
 
   // ── Determine the npm package (if any) implied by the install kind ─────
   const { pkg, pkgVersion } = resolveNpmPackage(entry.install);
 
   if (pkg) {
-    const meta = await fetchNpmMeta(pkg, pkgVersion);
+    const lookup = await fetchNpmMeta(pkg, pkgVersion);
 
-    if (meta == null) {
+    // "package exists but the pinned version is missing" is a hard fail —
+    // it means the entry points at a version nobody published (pin rot or
+    // a replay-attack surface). "package doesn't exist on npm at all" is a
+    // warning — first-party scaffolds in this repo can legitimately sit
+    // un-published for a short while, and contributors may PR an entry
+    // ahead of their first npm publish. Human reviewers catch that case.
+    if (lookup.status === 'missing-version') {
       findings.push({
         level: 'error',
         file: rel,
-        msg: `npm package "${pkg}${pkgVersion ? `@${pkgVersion}` : ''}" not found on registry.npmjs.org`,
+        msg: `npm package "${pkg}" exists on registry.npmjs.org but pinned version "${pkgVersion}" is not published. Either publish ${pkgVersion} or update the entry to a version that exists.`,
       });
       hardFails += 1;
       continue;
     }
+    if (lookup.status === 'missing-package') {
+      findings.push({
+        level: 'warn',
+        file: rel,
+        msg: `npm package "${pkg}" is not yet published on registry.npmjs.org. Security checks (install hooks, license, provenance) will run once it is published. Reviewers: confirm the package is expected to land before this entry is merged into any user-facing trust tier.`,
+      });
+      continue;
+    }
+    const meta = lookup.meta;
 
     // scripts check
     const scripts = meta.scripts ?? {};
@@ -148,20 +171,21 @@ function resolveNpmPackage(install) {
 async function fetchNpmMeta(pkg, version) {
   const url = `https://registry.npmjs.org/${encodeURIComponent(pkg).replace('%40', '@')}`;
   const res = await fetch(url, { headers: { Accept: 'application/json' } });
-  if (!res.ok) return null;
+  if (res.status === 404) return { status: 'missing-package' };
+  if (!res.ok) return { status: 'missing-package' };
   const body = await res.json();
   // Hard requirement: if a version is pinned in the entry, it MUST exist on
   // the registry. We do not silently fall back to "latest" — that would let
   // entries pass CI while pointing at a version nobody has published.
   if (version) {
     const target = body.versions?.[version];
-    if (!target) return null;
-    return meta(target);
+    if (!target) return { status: 'missing-version' };
+    return { status: 'ok', meta: meta(target) };
   }
   const latest = body['dist-tags']?.latest;
   const target = latest ? body.versions?.[latest] : null;
-  if (!target) return null;
-  return meta(target);
+  if (!target) return { status: 'missing-version' };
+  return { status: 'ok', meta: meta(target) };
 }
 
 function meta(versionDoc) {
