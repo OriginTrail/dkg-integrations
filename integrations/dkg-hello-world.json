@@ -19,7 +19,7 @@
   "targetAgents": ["generic-CLI", "generic-HTTP"],
   "install": {
     "kind": "cli",
-    "package": "@origintrail/dkg-hello-world",
+    "package": "@origintrail-official/dkg-hello-world",
     "version": "0.1.0",
     "binary": "dkg-hello-world",
     "envRequired": ["DKG_API_URL", "DKG_AUTH_TOKEN"],
