@@ -10,7 +10,7 @@
     "name": "OriginTrail Core Developers"
   },
   "repo": "https://github.com/OriginTrail/dkg-hello-world",
-  "commit": "0000000000000000000000000000000000000000",
+  "commit": "cb6af61a26b31be12ca9ff55a72af7442afe9c6b",
   "license": "Apache-2.0",
   "requiresDkgNodeVersion": ">=10.0.0-rc.1",
   "memoryLayers": ["WM"],
