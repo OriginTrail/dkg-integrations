@@ -1,0 +1,43 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "polymarket-analysis",
+  "name": "Polymarket Analysis Bot",
+  "description": "Analyzes Polymarket events for coordinated bot activity, suspicious holder concentration, and off-platform social amplification. Ingests every analysis as a DKG Knowledge Assertion in the user's chosen Context Graph so findings are queryable, shareable, and promotable to Verified Memory.",
+  "category": ["market-intelligence", "compliance", "analysis", "mcp", "working-memory"],
+  "maintainer": {
+    "github": "@KilianTrunk",
+    "name": "Umanitek",
+    "contact": "info@umanitek.io"
+  },
+  "repo": "https://github.com/KilianTrunk/polymarket-mcp",
+  "commit": "b09ca04d9b6a63c889cb41cf695223e645d6fc33",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.0-rc.1",
+  "memoryLayers": ["WM", "SWM"],
+  "v10PrimitivesUsed": ["ContextGraph", "Assertion", "KnowledgeAsset"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["Cursor", "Claude Code", "Claude Desktop", "generic-MCP"],
+  "install": {
+    "kind": "mcp",
+    "command": "npx",
+    "args": ["-y", "@umanitek/polymarket-mcp@1.0.0"],
+    "envRequired": ["DKG_API_URL", "POLYMARKET_SERVICE_URL"],
+    "supportedClients": ["cursor", "claude-code", "claude-desktop", "dkg-node"]
+  },
+  "security": {
+    "networkEgress": [
+      "http://ec2-3-127-230-231.eu-central-1.compute.amazonaws.com:8000"
+    ],
+    "writeAuthority": [
+      "POST /api/assertion/create",
+      "POST /api/assertion/{name}/write"
+    ],
+    "credentialsHandled": [],
+    "notes": "The MCP server itself talks to two endpoints only: the local DKG node (default 127.0.0.1:9200) and Umanitek's hosted analysis service (Polymarket Analysis API on EC2). All third-party API keys (Polymarket, LunarCrush) live on the EC2 service — the user never provides them and the MCP server never sees them. Writes to DKG are limited to creating named assertions in the user's chosen Context Graph (POST /api/assertion/create) and writing analysis quads into those assertions (POST /api/assertion/{name}/write); no PUBLISH (VM) or SHARE (SWM promotion) operations are performed by the integration itself. The npm package has no postinstall, install, or preinstall scripts. The hosted EC2 service enforces per-IP rate limiting and a body-size cap so abusive scripted use is bounded; see the project's api_service.py for the active limits."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/KilianTrunk/polymarket-mcp/blob/main/README.md",
+  "promotionPath": "Each analyze_market call creates a named Assertion in the caller's selected Context Graph (Working Memory) containing the full risk report — market metadata, risk score, top market movers, suspicious comment clusters, and LunarCrush social-amplification overlap — as RDF quads under the http://dkg.io/ontology/polymarket/ vocabulary. The agent or operator can then SPARQL-query the assertion, cross-reference it against other on-graph evidence, and explicitly promote it to Shared Memory for team review. From SWM, a subsequent PUBLISH operation anchors the analysis on-chain as a Verified Memory Knowledge Asset whose UAL becomes oracle-consumable evidence for downstream agents working on the same paranet's election-integrity, market-manipulation, or compliance use cases.",
+  "fitNotes": "Plugs directly into the LLM-Wiki / autoresearch direction: prediction-market manipulation is a domain where attribution and verifiability matter as much as the analysis itself, and DKG's WM→SWM→VM promotion chain provides exactly that audit trail. A coding agent or research agent operating on a Context Graph can call analyze_market on any Polymarket event URL and immediately have a structured, queryable, attributable evidence node it can reason over — without re-running the heavy analysis pipeline (held off-graph in the EC2 service) and without ever touching upstream API keys."
+}
