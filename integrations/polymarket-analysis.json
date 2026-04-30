@@ -1,0 +1,50 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "polymarket-analysis",
+  "name": "Polymarket Analysis Bot",
+  "description": "MCP server that analyzes Polymarket markets for coordination and manipulation signals, then writes the findings into a DKG v10 Context Graph as Working Memory assertions.",
+  "category": ["mcp", "prediction-market", "working-memory", "analytics", "polymarket"],
+  "maintainer": {
+    "github": "@KilianTrunk",
+    "name": "Umanitek",
+    "contact": "info@umanitek.io"
+  },
+  "repo": "https://github.com/KilianTrunk/polymarket-mcp",
+  "commit": "436efacaac5660989fa35d9d6396d664bc216cdc",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "memoryLayers": ["WM"],
+  "v10PrimitivesUsed": ["Assertion", "ContextGraph", "KnowledgeAsset"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["Cursor", "Claude Code", "Claude Desktop", "generic-MCP"],
+
+  "install": {
+    "kind": "mcp",
+    "command": "npx",
+    "args": ["-y", "@kiliantrunk/polymarket-mcp@1.0.1"],
+    "envRequired": ["DKG_API_URL", "POLYMARKET_SERVICE_URL"],
+    "supportedClients": ["cursor", "claude-code", "claude-desktop", "dkg-node"]
+  },
+
+  "security": {
+    "networkEgress": [
+      "https://ec2.umanitek.io",
+      "https://gamma-api.polymarket.com",
+      "https://data-api.polymarket.com",
+      "https://lunarcrush.com"
+    ],
+    "writeAuthority": [
+      "POST /api/assertion/create",
+      "POST /api/assertion/{name}/write"
+    ],
+    "credentialsHandled": ["POLYMARKET_API_KEY", "LUNARCRUSH_API_KEY", "API_TOKEN"],
+    "notes": "The MCP server talks to the user's local DKG node through DKG_API_URL and to the hosted Umanitek Polymarket analysis service through POLYMARKET_SERVICE_URL. The hosted analysis service reads POLYMARKET_API_KEY and LUNARCRUSH_API_KEY for upstream market/social data, and may use API_TOKEN to require X-API-Key on /analyze; these service-side credentials are operated by Umanitek and are not requested from MCP end users. The delegated service fetches public market data from Polymarket Gamma/Data APIs and social intelligence from LunarCrush. The MCP creates and writes assertions only in the caller-selected Context Graph Working Memory. It does not call SHARE/PUBLISH, Verified Memory, or admin endpoints. The published npm package has no preinstall, install, or postinstall scripts."
+  },
+
+  "trustTier": "community",
+
+  "designBrief": "https://github.com/KilianTrunk/polymarket-mcp#readme",
+  "promotionPath": "Polymarket analyses are written as Working Memory assertions in the selected Context Graph. Users can inspect and query the resulting assertion graph locally, then explicitly promote or publish selected findings through DKG governance/UI workflows outside this MCP.",
+  "fitNotes": "Targets market intelligence and autoresearch workflows where agents need verifiable upstream evidence for prediction-market risk signals. The MCP exposes analysis as a generic MCP tool while persisting structured findings into DKG v10 Working Memory for later SPARQL querying, sharing, or governance review."
+}
