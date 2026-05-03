@@ -1,0 +1,61 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "tracabot",
+  "name": "TRACaBot",
+  "description": "TRACaBot is a live Telegram anti-scam service and OpenClaw-compatible agent that turns evidence-backed moderation events into DKG v10 Shared Memory for cross-community fraud defense.",
+  "category": ["security", "telegram", "openclaw", "anti-scam"],
+  "maintainer": {
+    "github": "@brxtrac",
+    "name": "brxtrac"
+  },
+  "repo": "https://github.com/brxtrac/tracabot",
+  "commit": "fcc4d54d82e2d172353edaad1ccedc95c04ef5e2",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "memoryLayers": ["WM", "SWM"],
+  "v10PrimitivesUsed": [
+    "UAL",
+    "KnowledgeAsset",
+    "KnowledgeCollection",
+    "ContextGraph",
+    "Assertion",
+    "Integration",
+    "Curator",
+    "Entity"
+  ],
+  "publicInterfacesUsed": ["http-api", "cli"],
+  "targetAgents": ["OpenClaw", "generic-CLI"],
+  "install": {
+    "kind": "service",
+    "runtime": "npm-global",
+    "npmGlobal": {
+      "package": "tracabot",
+      "version": "0.1.0",
+      "binary": "tracabot"
+    },
+    "envRequired": [
+      "TELEGRAM_BOT_TOKEN",
+      "DKG_NODE_URL",
+      "TRACABOT_ADMINS"
+    ]
+  },
+  "security": {
+    "networkEgress": [
+      "api.telegram.org",
+      "optional operator-configured TRACABOT_LLM_BASE_URL"
+    ],
+    "writeAuthority": [
+      "createContextGraph via local DKG/OpenClaw daemon",
+      "SHARE evidence-backed events via local DKG/OpenClaw daemon",
+      "PUBLISH qualifying high-confidence event roots via local DKG/OpenClaw daemon"
+    ],
+    "credentialsHandled": ["TELEGRAM_BOT_TOKEN"],
+    "notes": "TRACaBot stores Telegram bot credentials in operator-managed environment files and reads local OpenClaw LLM configuration only when explicitly enabled. It has no preinstall, install, or postinstall scripts and performs no dynamic remote code loading. Weak reports, watchlists, digests, risk checks, and join-challenge housekeeping remain local-only; evidence-backed reports, findings, restrictions, appeals, reviews, campaigns, and bans are shared to DKG. Public Telegram replies redact internal DKG UALs, event IDs, graph names, OpenClaw endpoint/model details, and admin setup details. Telegram enforcement requires the bot to have chat-admin permissions and a requester to be a configured TRACaBot admin or discovered Telegram chat admin."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/brxtrac/tracabot/blob/fcc4d54d82e2d172353edaad1ccedc95c04ef5e2/docs/DESIGN_BRIEF.md",
+  "demo": "https://github.com/brxtrac/tracabot/blob/fcc4d54d82e2d172353edaad1ccedc95c04ef5e2/docs/DEMO.md",
+  "promotionPath": "TRACaBot keeps weak observations, watchlists, join-challenge state, and review queues in local operational working memory. Accepted reports, fraud findings, moderation actions, appeals, reviews, and campaign clusters are written to DKG v10 Shared Memory with structured actors, indicators, confidence, provenance, and correction fields. High-confidence accepted reports, findings, and executed bans are targeted for Context Graph publication so downstream agents and future context oracles can consume stable fraud intelligence while corrections remain auditable.",
+  "fitNotes": "TRACaBot advances the LLM-Wiki and autoresearch direction by turning Telegram moderation into reusable, explainable, contested knowledge. OpenClaw agents can scan targets, explain decisions, inspect watchlists and digests, query campaigns, submit appeals, and record reviews without bypassing Telegram enforcement safeguards."
+}
