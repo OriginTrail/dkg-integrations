@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "openclaw-working-memory",
+  "name": "OpenClaw Working Memory Adapter",
+  "description": "OpenClaw plugin that automatically captures every drafted artifact from an OpenClaw agent session and deposits it into DKG V10 Working Memory with status tags, provenance, content-hash deduplication, and secret redaction.",
+  "category": ["agent-plugin", "working-memory", "provenance", "autoresearch", "openclaw"],
+  "maintainer": {
+    "github": "@drMurlly",
+    "name": "drMurlly"
+  },
+  "repo": "https://github.com/drMurlly/dkg-openclaw-working-memory",
+  "commit": "17c09fe7ec03006807be20acfea4577c77b800c8",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.0-rc.1",
+  "memoryLayers": ["WM", "SWM"],
+  "v10PrimitivesUsed": ["ContextGraph", "Assertion", "UAL", "Integration", "Curator"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["OpenClaw"],
+  "install": {
+    "kind": "agent-plugin",
+    "framework": "openclaw",
+    "package": "dkg-openclaw-working-memory",
+    "version": "1.0.5"
+  },
+  "security": {
+    "networkEgress": [],
+    "writeAuthority": [
+      "POST /api/context-graph/create",
+      "POST /api/assertion/create",
+      "POST /api/assertion/{name}/write",
+      "POST /api/assertion/{name}/promote"
+    ],
+    "credentialsHandled": [],
+    "notes": "Only communicates with the local DKG node on 127.0.0.1:9200; no external network calls. Bearer token read from ~/.dkg/auth.token (handled by the installer). Curator-authority operation POST /api/assertion/{name}/promote (WM → SWM) is exposed as the explicit tool 'promote_artifact_to_shared_memory' which requires user-confirmed conversational instruction; the plugin never calls it automatically. PUBLISH and SHARE (Verified Memory) operations are NOT invoked. A redaction layer strips API keys, private keys, bearer tokens, PEM blocks, and .env-style secrets from artifact content before any DKG write. No postinstall, preinstall, or install scripts in the published npm package. No dynamic code loading (no eval on remote input, no remote module fetch). Published with build provenance via GitHub Actions OIDC (npm publish --provenance)."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/drMurlly/dkg-openclaw-working-memory/blob/main/docs/DESIGN_BRIEF.md",
+  "demo": "https://github.com/drMurlly/dkg-openclaw-working-memory/releases/download/v1.0.5/dkg-demo-final-v2.mp4",
+  "promotionPath": "Artifacts land in Working Memory (wm-artifacts Context Graph) with project-centric layering (workspaceProject field in provenance). Conversational status updates (draft → validated → ready_to_share) curate the artifact through the trust gradient. On explicit user confirmation, promote_artifact_to_shared_memory calls POST /api/assertion/{name}/promote, gossiping the artifact to team peers. Every artifact stores its UAL — a stable, oracle-resolvable reference. The JSON-LD schema (wm: predicates, schema.org for content) is unchanged after promotion to Verified Memory in Round 2; the same SPARQL filter wm:status=validated returns oracle-consumable artifacts across all three layers.",
+  "fitNotes": "Implements the 'OpenClaw adapter that deposits every drafted artifact into the author's Working Memory, status tags, and provenance' shape from Section 4 of the bounty call. Differentiates from the first-party cursor-mcp-dkg (which serves Cursor/Claude Code/Claude Desktop via MCP) by being OpenClaw-native: automatic capture hooks fire on every assistant message and file write, no prompt-driven invocation required. Concrete first user is the maintainer (drMurlly) who runs OpenClaw bug-bounty research sessions on Immunefi/Code4rena — a real, recurring workflow where research notes, vulnerability hypotheses, and audit findings vanish at session end today and accumulate as queryable memory once this plugin is loaded."
+}
