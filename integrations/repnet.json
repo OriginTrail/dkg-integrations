@@ -1,0 +1,90 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "repnet",
+  "name": "RepNet Agent Trust Layer",
+  "description": "RepNet gives AI agents a DKG-backed trust layer for choosing counterparties. Agent identities, agreements, payments, escrow outcomes, disputes, and role-aware feedback become structured memory that future agents can query before hiring, paying, delegating, collaborating, or trusting.",
+  "category": [
+    "mcp",
+    "reputation",
+    "agent-trust",
+    "working-memory",
+    "shared-memory",
+    "escrow"
+  ],
+  "maintainer": {
+    "github": "@dreddster",
+    "name": "Milian Istatkov",
+    "contact": "istatkov@tuta.com"
+  },
+  "repo": "https://github.com/dreddster/RepNet",
+  "commit": "1241e421b88de1bfe9631f1d38f5e969f9eda375",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.0-rc.4",
+  "memoryLayers": [
+    "WM",
+    "SWM",
+    "VM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "Assertion",
+    "KnowledgeAsset",
+    "Curator",
+    "Entity",
+    "UAL"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "Hermes",
+    "Claude Code",
+    "Claude Desktop",
+    "Cursor",
+    "ElizaOS",
+    "generic-MCP",
+    "generic-CLI"
+  ],
+  "install": {
+    "kind": "mcp",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@repnet/mcp-server@0.1.2"
+    ],
+    "envRequired": [
+      "REPNET_PRIVATE_KEY",
+      "DKG_API_URL",
+      "DKG_AUTH_TOKEN",
+      "DKG_CONTEXT_GRAPH_ID"
+    ],
+    "supportedClients": [
+      "cursor",
+      "claude-code",
+      "claude-desktop",
+      "dkg-node"
+    ]
+  },
+  "security": {
+    "networkEgress": [
+      "configured Base/Base Sepolia RPC endpoint",
+      "configured DKG node HTTP API",
+      "configured RepNet publisher API when submitting feedback through publisher-backed actions"
+    ],
+    "writeAuthority": [
+      "POST /api/shared-memory/write",
+      "POST /api/publish-direct"
+    ],
+    "credentialsHandled": [
+      "REPNET_PRIVATE_KEY",
+      "REPNET_RPC_URL"
+    ],
+    "notes": "RepNet consumes the DKG node through its HTTP API and does not import internal DKG packages or patch node source. Shared Memory writes are used for redacted repnet:DisputeCase RDF manifests before judging. Knowledge Asset publishing is used for public Agent Profiles, Job Agreements, Job Feedback, receipts, and final dispute reasoning where configured. Context Graph / Curator authority remains with the configured node and graph policy; clients submit signed intent or feedback and do not forge public reputation assets directly. The published MCP package has no preinstall, install, or postinstall scripts."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/dreddster/RepNet/blob/main/docs/DKG-INTEGRATION-DESIGN-BRIEF.md",
+  "demo": "https://github.com/dreddster/RepNet/blob/main/docs/assets/demos/agent-onboarding.mp4",
+  "promotionPath": "Private job and dispute material starts as RepNet Working Memory. Before judging, RepNet writes a redacted repnet:DisputeCase manifest to DKG Shared Memory for Context Graph peers. Public Agent Profiles, Job Agreements, Job Feedback, receipts, and final dispute reasoning are shaped as Knowledge Assets with stable identifiers, proof references, hashes, timestamps, and parties so later Verified Memory and context-oracle pipelines can answer reliability questions with provenance.",
+  "fitNotes": "RepNet public receipts and feedback create aggregate agent-work intelligence: job categories, work types, deliverables, tools, payment amounts, outcomes, dispute patterns, and role-aware feedback. Over time this becomes useful input for AI research, market analysis, trend prediction, agent benchmarking, and reputation-aware discovery without exposing private specifications or dispute evidence."
+}
