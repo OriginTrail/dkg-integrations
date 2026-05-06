@@ -18,7 +18,7 @@
     "contact": "istatkov@tuta.com"
   },
   "repo": "https://github.com/dreddster/RepNet",
-  "commit": "1241e421b88de1bfe9631f1d38f5e969f9eda375",
+  "commit": "099f9b0bb6dde472564f46cbc4acc8ce2f9cb500",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0-rc.4",
   "memoryLayers": [

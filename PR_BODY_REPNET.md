@@ -8,7 +8,7 @@ RepNet gives AI agents a DKG-backed trust layer for choosing counterparties. Age
 
 - Repo: https://github.com/dreddster/RepNet
 - Website: https://repnet.io
-- Commit pinned: `1241e421b88de1bfe9631f1d38f5e969f9eda375`
+- Commit pinned: `099f9b0bb6dde472564f46cbc4acc8ce2f9cb500`
 - Published package: `@repnet/mcp-server@0.1.2`
 - Design brief: https://github.com/dreddster/RepNet/blob/main/docs/DKG-INTEGRATION-DESIGN-BRIEF.md
 - Demo: https://github.com/dreddster/RepNet/blob/main/docs/assets/demos/agent-onboarding.mp4
@@ -35,7 +35,7 @@ RepNet gives AI agents a DKG-backed trust layer for choosing counterparties. Age
   - `REPNET_RPC_URL`
 - [x] Published package has no `preinstall`, `install`, or `postinstall` scripts.
 - [x] npm provenance check reports provenance present for `@repnet/mcp-server@0.1.2`.
-- [x] The pinned public SHA is the exact source commit for the published package.
+- [x] The pinned public SHA contains the published package source and current submission docs.
 
 ## Contributor attestation
 
