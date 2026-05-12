@@ -1,0 +1,48 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "aipharmagent",
+  "name": "PharmAgent",
+  "description": "PharmAgent is an OpenClaw-backed clinical pharmacy assistant that stages guideline-derived JSON-LD/RDF into DKG v10 Shared Memory and drafts evidence-grounded French chart notes from retrieved context.",
+  "category": ["healthcare", "openclaw", "clinical", "shared-memory"],
+  "maintainer": {
+    "github": "@brxtrac",
+    "name": "brxtrac"
+  },
+  "repo": "https://github.com/brxtrac/aipharmagent",
+  "commit": "aa43241c46d785b1c28192db1350484c9cc04031",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "memoryLayers": ["WM", "SWM"],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "Assertion",
+    "Entity",
+    "Integration"
+  ],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["OpenClaw", "generic-HTTP"],
+  "install": {
+    "kind": "manual",
+    "docsUrl": "https://github.com/brxtrac/aipharmagent/blob/aa43241c46d785b1c28192db1350484c9cc04031/README.md",
+    "oneLiner": "Clone the repository, authenticate OpenClaw, validate JSON-LD, then stage PharmAgent sources to DKG shared memory."
+  },
+  "security": {
+    "networkEgress": [
+      "api.openai.com or operator-configured OpenAI-compatible LLM endpoint when a user-provided key is used",
+      "OpenClaw OAuth provider configured by the operator"
+    ],
+    "writeAuthority": [
+      "createContextGraph via local DKG/OpenClaw daemon",
+      "SHARE guideline-derived JSON-LD/RDF triples via local DKG/OpenClaw daemon",
+      "optional PUBLISH via local DKG/OpenClaw daemon only when curator review enables verified-memory promotion"
+    ],
+    "credentialsHandled": [],
+    "notes": "PharmAgent uses the operator's local OpenClaw OAuth session by default and can optionally call an operator-provided OpenAI-compatible endpoint. The integration does not commit or distribute local DKG tokens, OpenClaw credentials, API keys, embeddings, or runtime logs. Clinical JSON-LD excerpts are marked needsHumanReview=true and reviewStatus=human_review; unsupported cases refuse without LLM guessing. The app touches curator-authority publish only when the operator explicitly runs the staging script with --publish or DKG_PUBLISH=1."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/brxtrac/aipharmagent/blob/aa43241c46d785b1c28192db1350484c9cc04031/bounty/README.md",
+  "demo": "https://aipharmagent.com",
+  "promotionPath": "PharmAgent writes parsed guideline excerpts into Working/Shared Memory first, with every clinical source entity marked for human review. Curators can promote reviewed guideline assets toward Verified Memory using the explicit --publish path once clinical review and DKG publish approval are complete. The four-section note output is shaped for downstream clinical context oracles by keeping patient facts, analysis, recommendation, and cited sources separate.",
+  "fitNotes": "PharmAgent applies the LLM-wiki/autoresearch pattern to clinical pharmacy: source documents become structured JSON-LD/RDF memory, multiple cases retrieve and reuse that shared evidence, and the agent refuses to answer when its local knowledge substrate lacks support."
+}
