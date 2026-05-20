@@ -11,7 +11,7 @@
     "contact": "manojmodhwadia@outlook.com"
   },
   "repo": "https://github.com/Muffinman75/agience-flare-dkg-integration",
-  "commit": "09bf331ae13b9ba1ddbec07957e49e0bce358a92",
+  "commit": "9f4a095b94bfdf1a9e7d1b46ed0cc0e8a1c8165f",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0-rc.1",
   "memoryLayers": ["WM", "SWM"],
