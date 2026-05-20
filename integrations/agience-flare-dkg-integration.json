@@ -11,7 +11,7 @@
     "contact": "manojmodhwadia@outlook.com"
   },
   "repo": "https://github.com/Muffinman75/agience-flare-dkg-integration",
-  "commit": "9f4a095b94bfdf1a9e7d1b46ed0cc0e8a1c8165f",
+  "commit": "a278898d462622d16ad81c17dd87b800f25cecdc",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0-rc.1",
   "memoryLayers": ["WM", "SWM"],
@@ -19,9 +19,12 @@
   "publicInterfacesUsed": ["mcp"],
   "targetAgents": ["generic-MCP", "generic-CLI", "generic-HTTP"],
   "install": {
-    "kind": "manual",
-    "docsUrl": "https://github.com/Muffinman75/agience-flare-dkg-integration/blob/main/README.md",
-    "oneLiner": "Python package on PyPI: `pip install agience-flare-dkg-integration==0.3.0`. Provides a CLI (`agience-dkg wm-write`, `promote`, `search`) and a `DkgHttpClient` library that drive the local DKG node's MCP Streamable HTTP transport (POST /mcp). Configure DKG_BASE_URL, DKG_TOKEN, DKG_CONTEXT_GRAPH; for governed-mode also set AGIENCE_BASE_URL and AGIENCE_TOKEN."
+    "kind": "cli",
+    "package": "agience-flare-dkg-integration",
+    "version": "0.3.1",
+    "binary": "agience-dkg",
+    "envRequired": ["DKG_BASE_URL", "DKG_TOKEN"],
+    "usageHint": "The npm package is a thin Node wrapper around the Python CLI on PyPI. Install both: `npm i -g agience-flare-dkg-integration && pipx install agience-flare-dkg-integration==0.3.1`. Run `agience-dkg wm-write|promote|search`. Required env: DKG_BASE_URL, DKG_TOKEN, DKG_CONTEXT_GRAPH. Governed-mode also reads AGIENCE_BASE_URL and AGIENCE_TOKEN."
   },
   "security": {
     "networkEgress": [],
@@ -32,7 +35,7 @@
       "GET /health"
     ],
     "credentialsHandled": ["AGIENCE_TOKEN"],
-    "notes": "Distribution: published to PyPI (not npm) at https://pypi.org/project/agience-flare-dkg-integration/0.3.0/ via GitHub Actions with build provenance (pypa/gh-action-pypi-publish, attestations: true). The npm-registry lookup in CI will warn 'package not yet published' — expected, this is a Python package. Registered MIT in package metadata. No postinstall/preinstall hooks (Python packaging does not use those). Egress: only the local DKG node (DKG_BASE_URL, default http://localhost:8081) and, if governed-mode is enabled, an Agience platform endpoint (AGIENCE_BASE_URL) the operator explicitly configures; FLARE service endpoint is opt-in and disabled by default. Curator-authority surface: SHARE (privacy=public dkg-create) is invoked only when an operator explicitly runs the `promote` CLI command or calls DkgHttpClient.promote_to_swm; PUBLISH/VM is out of scope for Round 1 and not invoked. Governed-mode (`--from-agience-artifact`) refuses to project unless the upstream Agience artifact's state is `committed`, attaching the commit_receipt_id to the Knowledge Asset for downstream auditability. No dynamic code loading; no eval on remote input. pip-audit --production is clean. 60 unit tests + 5 integration tests in this repo; 6 DKG service tests in the parent Agience Core repo; 101 tests in the FLARE Index repo (172 total). Maintainer commits to a 6-month support window from acceptance — see docs/maintainer-statement.md."
+    "notes": "Distribution: dual-published with build provenance to npm (https://www.npmjs.com/package/agience-flare-dkg-integration) and PyPI (https://pypi.org/project/agience-flare-dkg-integration/0.3.1/), both via GitHub Actions tag-triggered workflows. The npm package (3.8 kB tarball, 5 files, zero runtime dependencies) is a thin wrapper that delegates to the Python CLI shipped on PyPI; all integration logic lives in the Python package. npm publish uses `--provenance --access public` against id-token: write, producing a SLSA v1 attestation signed by the GitHub Actions runner and recorded in the public sigstore transparency log. PyPI publish uses pypa/gh-action-pypi-publish with attestations: true. No `preinstall`, `install`, or `postinstall` scripts in either package — Section 8a compliant. No dynamic code loading, no eval on remote input. Egress: only the local DKG node (DKG_BASE_URL, default http://localhost:8081) and, if governed-mode is enabled, an Agience platform endpoint (AGIENCE_BASE_URL) the operator explicitly configures; FLARE service endpoint is opt-in and disabled by default. Curator-authority surface: SHARE (privacy=public dkg-create) is invoked only when an operator explicitly runs the `promote` CLI command or calls DkgHttpClient.promote_to_swm; PUBLISH/VM is out of scope for Round 1 and not invoked. Governed-mode (`--from-agience-artifact`) refuses to project unless the upstream Agience artifact's state is `committed`, attaching the commit_receipt_id to the Knowledge Asset for downstream auditability. pip-audit --production is clean. 60 unit tests + 5 integration tests in this repo; 6 DKG service tests in the parent Agience Core repo; 101 tests in the FLARE Index repo (172 total). Maintainer commits to a 6-month support window from acceptance — see docs/maintainer-statement.md."
   },
   "trustTier": "community",
   "designBrief": "https://github.com/Muffinman75/agience-flare-dkg-integration/blob/main/DESIGN_BRIEF.md",
