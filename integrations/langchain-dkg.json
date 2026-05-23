@@ -6,16 +6,16 @@
   "description": "LangChain memory and retriever components backed by OriginTrail DKG v10. Gives LangChain agents durable, verifiable, queryable memory — conversation history is stored as Knowledge Assets in Working Memory and retrieved via tri-modal search (vector + SPARQL + text).",
   "category": ["working-memory", "retrieval", "python", "langchain", "rag"],
   "maintainer": {
-    "github": "@haroldboom",
-    "contact": "spangers11@gmail.com"
+    "github": "@haroldboom"
   },
   "repo": "https://github.com/haroldboom/dkg-langchain",
-  "commit": "80392345732114b2e2d4395bcece3b1a5df5bcb5",
+  "commit": "ad6295e6a9c9d94e75dd63bb215aa892b9630dac",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0",
   "memoryLayers": ["WM", "SWM"],
   "v10PrimitivesUsed": ["UAL", "KnowledgeAsset", "ContextGraph", "Assertion"],
   "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["AutoResearch", "generic-HTTP", "generic-CLI"],
 
   "install": {
     "kind": "manual",
@@ -30,12 +30,13 @@
       "POST /api/assertion/{name}/promote"
     ],
     "credentialsHandled": [],
-    "notes": "Communicates only with the local DKG node (default localhost:9200) — no external network egress. Credentials are read from the DKG_TOKEN environment variable or passed explicitly to DKGClient; never hardcoded. POST /api/memory/turn stores conversation turns as Knowledge Assets in Working Memory. POST /api/assertion/{name}/promote is a Curator-authority SHARE operation that moves a turn to Shared Working Memory; this is always explicit and agent-initiated, never automatic. No Verified Memory (PUBLISH) operations are performed. The package has no postinstall, install, or preinstall scripts."
+    "notes": "Communicates only with the local DKG node (default localhost:9200) — no external network egress. Credentials are read from the DKG_TOKEN environment variable or passed explicitly to DKGClient; never hardcoded. POST /api/memory/turn stores conversation turns as Knowledge Assets in Working Memory. POST /api/assertion/{name}/promote is a Curator-authority SHARE operation that moves a turn to Shared Working Memory; this is always explicit and agent-initiated, never automatic. No Verified Memory (PUBLISH) operations are performed. 25/25 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. The package has no postinstall, install, or preinstall scripts."
   },
 
   "trustTier": "community",
 
   "designBrief": "https://github.com/haroldboom/dkg-langchain/blob/master/DESIGN_BRIEF.md",
+  "demo": "https://youtu.be/0XVYrikAZFQ",
   "promotionPath": "Every conversation turn stored via DKGChatMessageHistory returns a turnUri (UAL). The agent can call promote_to_shared(turn_uri) to SHARE the Knowledge Asset from Working Memory to Shared Working Memory via POST /api/assertion/{name}/promote — promotion is always explicit. From Shared Working Memory, a future PUBLISH call (Round 2 scope) moves the Context Graph to Verified Memory on-chain, preserving the full UAL provenance chain from original turn through to the paranet record. DKGRetriever queries the same WM/SWM graph via SPARQL SELECT, so promoted artifacts are immediately available as RAG context for downstream agents.",
   "fitNotes": "Directly targets the LLM-Wiki / autoresearch direction: LangChain agents are the dominant production consumer of external memory systems, and this adapter maps Karpathy's memory taxonomy (in-context, external, team, long-term) onto the DKG v10 layer model (WM, SWM, VM). DKGRetriever is a drop-in BaseRetriever for any LangChain RAG pipeline, giving any autoresearch-style agent a verifiable, attributable upstream knowledge source."
 }
