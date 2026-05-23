@@ -6,7 +6,8 @@
   "description": "LangChain memory and retriever components backed by OriginTrail DKG v10. Gives LangChain agents durable, verifiable, queryable memory — conversation history is stored as Knowledge Assets in Working Memory and retrieved via tri-modal search (vector + SPARQL + text).",
   "category": ["working-memory", "retrieval", "python", "langchain", "rag"],
   "maintainer": {
-    "github": "@haroldboom"
+    "github": "@haroldboom",
+    "contact": "spangers11@gmail.com"
   },
   "repo": "https://github.com/haroldboom/dkg-langchain",
   "commit": "ad6295e6a9c9d94e75dd63bb215aa892b9630dac",
