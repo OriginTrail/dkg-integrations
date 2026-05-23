@@ -10,7 +10,7 @@
     "contact": "spangers11@gmail.com"
   },
   "repo": "https://github.com/haroldboom/github-dkg",
-  "commit": "cc66bad45802042a0bda7705fb510023836e3006",
+  "commit": "b9c1edee9be4076f8e9d8e2a05c75aaa3fc8d0c1",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0-rc.1",
   "memoryLayers": ["WM", "SWM"],
@@ -20,7 +20,7 @@
   "install": {
     "kind": "cli",
     "package": "github-dkg",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "binary": "github-dkg",
     "envRequired": ["DKG_TOKEN", "DKG_BASE_URL", "DKG_CONTEXT_GRAPH", "GITHUB_TOKEN"],
     "usageHint": "Bulk-ingest:\n  github-dkg ingest owner/repo\nSingle item:\n  github-dkg ingest-one owner/repo 42 --type issue\nSearch:\n  github-dkg search \"query\"\nPromote WM→SWM:\n  github-dkg promote <ual>\nAll commands accept --context-graph (or read $DKG_CONTEXT_GRAPH). Also ships as a Docker-based GitHub Action: haroldboom/github-dkg@v0.1.0."
@@ -32,7 +32,7 @@
       "POST /api/assertion/{name}/promote"
     ],
     "credentialsHandled": ["GITHUB_TOKEN"],
-    "notes": "Communicates with the local DKG node (HTTP, port 9200 by default) and the GitHub REST API at api.github.com. Writes Knowledge Assets to Working Memory by default; promotion to Shared Working Memory (POST /api/assertion/{name}/promote) is always explicit and never automatic — the bundled GitHub Action example workflow gates promotion on a PR label (`architecture-decision`) so the choice is the team's, not the integration's. PUBLISH (Verified Memory) is never called. GitHub rate-limit responses (403/429 with X-RateLimit-Remaining: 0) surface as a typed GitHubRateLimitError carrying the reset timestamp, so callers can back off rather than retry into a ban. 23/23 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. Verified compatible with DKG v10 rc.8 (latest at submission). No postinstall/preinstall scripts; the package is plain hatchling-built and uploaded to PyPI via twine."
+    "notes": "Communicates with the local DKG node (HTTP, port 9200 by default) and the GitHub REST API at api.github.com. Writes Knowledge Assets to Working Memory by default; promotion to Shared Working Memory (POST /api/assertion/{name}/promote) is always explicit and never automatic — the bundled GitHub Action example workflow gates promotion on a PR label (`architecture-decision`) so the choice is the team's, not the integration's. PUBLISH (Verified Memory) is never called. GitHub rate-limit responses (403/429 with X-RateLimit-Remaining: 0) surface as a typed GitHubRateLimitError carrying the reset timestamp, so callers can back off rather than retry into a ban. 23/23 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. Verified compatible with DKG v10 rc.8 (latest at submission). No postinstall/preinstall scripts. Published to PyPI via `pypa/gh-action-pypi-publish@release/v1` with `attestations: true` under PyPI Trusted Publishing (workflow `publish.yml`, environment `pypi`) — wheel ships with a PEP-740 attestation signed by the GitHub Actions runner, fetchable at `https://pypi.org/integrity/github-dkg/0.1.1/<file>/provenance`."
   },
   "trustTier": "community",
   "designBrief": "https://github.com/haroldboom/github-dkg/blob/master/DESIGN_BRIEF.md",
