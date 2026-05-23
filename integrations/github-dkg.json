@@ -10,7 +10,7 @@
     "contact": "spangers11@gmail.com"
   },
   "repo": "https://github.com/haroldboom/github-dkg",
-  "commit": "5cda3aacbc65609cf3c2771df0bf0c17d51f76ba",
+  "commit": "cc66bad45802042a0bda7705fb510023836e3006",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0-rc.1",
   "memoryLayers": ["WM", "SWM"],
