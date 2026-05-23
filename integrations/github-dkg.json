@@ -4,14 +4,14 @@
   "slug": "github-dkg",
   "name": "GitHub Knowledge Ingest for DKG v10",
   "description": "Ingests GitHub issues, pull requests, and review comments into DKG v10 Working Memory as Knowledge Assets. Each item becomes one tri-modal asset (markdown + structural triples + embedding); architecture-decision PRs can be promoted to Shared Working Memory for team-wide visibility. Ships as a CLI and a Docker-based GitHub Action that fires on issue / pull_request / pull_request_review events.",
-  "category": ["ingestion", "github", "working-memory", "shared-memory"],
+  "category": ["ingestion", "github", "working-memory", "shared-memory", "engineering", "provenance"],
   "maintainer": {
     "github": "@haroldboom"
   },
   "repo": "https://github.com/haroldboom/github-dkg",
-  "commit": "f2b9f67c9518137e5fc197507205520f3e402c71",
+  "commit": "5cda3aacbc65609cf3c2771df0bf0c17d51f76ba",
   "license": "MIT",
-  "requiresDkgNodeVersion": ">=10.0.0",
+  "requiresDkgNodeVersion": ">=10.0.0-rc.1",
   "memoryLayers": ["WM", "SWM"],
   "v10PrimitivesUsed": ["ContextGraph", "Assertion", "KnowledgeAsset"],
   "publicInterfacesUsed": ["http-api"],
@@ -22,7 +22,7 @@
     "version": "0.1.0",
     "binary": "github-dkg",
     "envRequired": ["DKG_TOKEN", "DKG_BASE_URL", "DKG_CONTEXT_GRAPH", "GITHUB_TOKEN"],
-    "usageHint": "Bulk-ingest a repo:\n  github-dkg ingest owner/repo --context-graph $DKG_CONTEXT_GRAPH\n\nIngest a single item:\n  github-dkg ingest-one owner/repo 42 --type issue --context-graph $DKG_CONTEXT_GRAPH\n\nSearch ingested knowledge:\n  github-dkg search \"authentication bug\" --context-graph $DKG_CONTEXT_GRAPH\n\nPromote a Working Memory asset to Shared Working Memory:\n  github-dkg promote dkg://wm/turn/abc --context-graph $DKG_CONTEXT_GRAPH\n\nAlso ships as a Docker-based GitHub Action — see haroldboom/github-dkg@v0.1.0."
+    "usageHint": "Bulk-ingest:\n  github-dkg ingest owner/repo\nSingle item:\n  github-dkg ingest-one owner/repo 42 --type issue\nSearch:\n  github-dkg search \"query\"\nPromote WM→SWM:\n  github-dkg promote <ual>\nAll commands accept --context-graph (or read $DKG_CONTEXT_GRAPH). Also ships as a Docker-based GitHub Action: haroldboom/github-dkg@v0.1.0."
   },
   "security": {
     "networkEgress": ["api.github.com"],
@@ -31,7 +31,7 @@
       "POST /api/assertion/{name}/promote"
     ],
     "credentialsHandled": ["GITHUB_TOKEN"],
-    "notes": "Communicates with the local DKG node (HTTP, port 9200 by default) and the GitHub REST API at api.github.com. Writes Knowledge Assets to Working Memory by default; promotion to Shared Working Memory (POST /api/assertion/{name}/promote) is always explicit and never automatic — the bundled GitHub Action example workflow gates promotion on a PR label (`architecture-decision`) so the choice is the team's, not the integration's. PUBLISH (Verified Memory) is never called. GitHub rate-limit responses (403/429 with X-RateLimit-Remaining: 0) surface as a typed GitHubRateLimitError carrying the reset timestamp, so callers can back off rather than retry into a ban. No postinstall/preinstall scripts; the package is plain hatchling-built and uploaded to PyPI via twine."
+    "notes": "Communicates with the local DKG node (HTTP, port 9200 by default) and the GitHub REST API at api.github.com. Writes Knowledge Assets to Working Memory by default; promotion to Shared Working Memory (POST /api/assertion/{name}/promote) is always explicit and never automatic — the bundled GitHub Action example workflow gates promotion on a PR label (`architecture-decision`) so the choice is the team's, not the integration's. PUBLISH (Verified Memory) is never called. GitHub rate-limit responses (403/429 with X-RateLimit-Remaining: 0) surface as a typed GitHubRateLimitError carrying the reset timestamp, so callers can back off rather than retry into a ban. 23/23 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. Verified compatible with DKG v10 rc.8 (latest at submission). No postinstall/preinstall scripts; the package is plain hatchling-built and uploaded to PyPI via twine."
   },
   "trustTier": "community",
   "designBrief": "https://github.com/haroldboom/github-dkg/blob/master/DESIGN_BRIEF.md",
