@@ -6,7 +6,8 @@
   "description": "Ingests GitHub issues, pull requests, and review comments into DKG v10 Working Memory as Knowledge Assets. Each item becomes one tri-modal asset (markdown + structural triples + embedding); architecture-decision PRs can be promoted to Shared Working Memory for team-wide visibility. Ships as a CLI and a Docker-based GitHub Action that fires on issue / pull_request / pull_request_review events.",
   "category": ["ingestion", "github", "working-memory", "shared-memory", "engineering", "provenance"],
   "maintainer": {
-    "github": "@haroldboom"
+    "github": "@haroldboom",
+    "contact": "spangers11@gmail.com"
   },
   "repo": "https://github.com/haroldboom/github-dkg",
   "commit": "5cda3aacbc65609cf3c2771df0bf0c17d51f76ba",
