@@ -10,7 +10,7 @@
     "contact": "spangers11@gmail.com"
   },
   "repo": "https://github.com/haroldboom/dkg-langchain",
-  "commit": "bd7bc9469df95faccad675ad31377a8efee90c8b",
+  "commit": "97ecf2a3013f8c28f6711fb86dc636cf76a56edd",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0",
   "memoryLayers": ["WM", "SWM"],
@@ -21,7 +21,7 @@
   "install": {
     "kind": "manual",
     "docsUrl": "https://github.com/haroldboom/dkg-langchain#readme",
-    "oneLiner": "pip install langchain-dkg — then set DKG_API_URL and DKG_TOKEN and import DKGChatMessageHistory, DKGMemory, or DKGRetriever."
+    "oneLiner": "pip install langchain-dkg==0.1.2 — then set DKG_API_URL and DKG_TOKEN and import DKGChatMessageHistory, DKGMemory, or DKGRetriever."
   },
 
   "security": {
@@ -31,7 +31,7 @@
       "POST /api/assertion/{name}/promote"
     ],
     "credentialsHandled": [],
-    "notes": "Communicates only with the local DKG node (default localhost:9200) — no external network egress. Credentials are read from the DKG_TOKEN environment variable or passed explicitly to DKGClient; never hardcoded. POST /api/memory/turn stores conversation turns as Knowledge Assets in Working Memory. POST /api/assertion/{name}/promote is a Curator-authority SHARE operation that moves a turn to Shared Working Memory; this is always explicit and agent-initiated, never automatic. No Verified Memory (PUBLISH) operations are performed. 25/25 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. The package has no postinstall, install, or preinstall scripts."
+    "notes": "Communicates only with the local DKG node (default localhost:9200) — no external network egress. Credentials are read from the DKG_TOKEN environment variable or passed explicitly to DKGClient; never hardcoded. POST /api/memory/turn stores conversation turns as Knowledge Assets in Working Memory. POST /api/assertion/{name}/promote is a Curator-authority SHARE operation that moves a turn to Shared Working Memory; this is always explicit and agent-initiated, never automatic. No Verified Memory (PUBLISH) operations are performed. 25/25 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. The package has no postinstall, install, or preinstall scripts. Published to PyPI via `pypa/gh-action-pypi-publish@release/v1` with `attestations: true` under PyPI Trusted Publishing (workflow `publish.yml`, environment `pypi`) — wheel ships with a PEP-740 attestation signed by the GitHub Actions runner, fetchable at `https://pypi.org/integrity/langchain-dkg/0.1.2/<file>/provenance`."
   },
 
   "trustTier": "community",
