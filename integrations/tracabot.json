@@ -3,14 +3,14 @@
   "schemaVersion": "0.1.0",
   "slug": "tracabot",
   "name": "TRACaBot",
-  "description": "TRACaBot is a live Telegram anti-scam service and OpenClaw-compatible agent that turns evidence-backed moderation events into DKG v10 Shared Memory for cross-community fraud defense.",
-  "category": ["security", "telegram", "openclaw", "anti-scam"],
+  "description": "TRACaBot is an OpenClaw-compatible Telegram anti-scam agent that writes and queries DKG v10 Working and Shared Memory so fraud reports, reviews, and campaign signals can be reused across communities.",
+  "category": ["openclaw", "telegram", "security", "shared-memory", "working-memory", "autoresearch"],
   "maintainer": {
     "github": "@brxtrac",
     "name": "brxtrac"
   },
   "repo": "https://github.com/brxtrac/tracabot",
-  "commit": "6741e649c5be43c05da09585846af4fefce4b76a",
+  "commit": "3ea6ee90cb7130fe2c85174576f18d8f1da59c50",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0",
   "memoryLayers": ["WM", "SWM"],
@@ -24,8 +24,8 @@
     "Curator",
     "Entity"
   ],
-  "publicInterfacesUsed": ["http-api", "cli"],
-  "targetAgents": ["OpenClaw", "generic-CLI"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["OpenClaw", "generic-CLI", "generic-HTTP"],
   "install": {
     "kind": "service",
     "runtime": "npm-global",
@@ -43,19 +43,23 @@
   "security": {
     "networkEgress": [
       "api.telegram.org",
-      "optional operator-configured TRACABOT_LLM_BASE_URL"
+      "operator-configured local DKG node URL, default http://127.0.0.1:9200",
+      "operator-configured local OpenClaw gateway, default http://127.0.0.1:18789",
+      "operator-configured OpenAI-compatible LLM endpoint only when TRACABOT_LLM_BASE_URL is explicitly set"
     ],
     "writeAuthority": [
       "createContextGraph via local DKG/OpenClaw daemon",
-      "SHARE evidence-backed events via local DKG/OpenClaw daemon",
+      "createAssertion/writeAssertion/promoteAssertion for DKG Working Memory to Shared Working Memory staging when adapter-supported",
+      "SHARE evidence-backed fraud reports, findings, restrictions, bans, appeals, reviews, campaigns, and selected high-confidence channel observations via local DKG/OpenClaw daemon",
+      "query Context Graph Shared Memory with includeSharedMemory=true for cross-community risk evidence",
       "PUBLISH qualifying high-confidence event roots via local DKG/OpenClaw daemon"
     ],
-    "credentialsHandled": ["TELEGRAM_BOT_TOKEN"],
-    "notes": "TRACaBot stores Telegram bot credentials in operator-managed environment files and reads local OpenClaw LLM configuration only when explicitly enabled. It has no preinstall, install, or postinstall scripts and performs no dynamic remote code loading. Weak reports, watchlists, digests, risk checks, and join-challenge housekeeping remain local-only; evidence-backed reports, findings, restrictions, appeals, reviews, campaigns, and bans are shared to DKG. Public Telegram replies redact internal DKG UALs, event IDs, graph names, OpenClaw endpoint/model details, and admin setup details. Telegram enforcement requires the bot to have chat-admin permissions and a requester to be a configured TRACaBot admin or discovered Telegram chat admin."
+    "credentialsHandled": ["TELEGRAM_BOT_TOKEN", "optional LLM API key"],
+    "notes": "TRACaBot keeps DKG auth and OpenClaw credentials in the operator's local environment and does not print them in group chat. It has no preinstall/postinstall scripts, no remote code loading, no internal DKG v10 package imports, no daemon patches, and no endorsement/voting or Conviction UX. Curator-authority SHARE/PUBLISH operations are explicit runtime writes through the configured local DKG/OpenClaw adapter. Public Telegram replies redact internal UALs, graph names, OpenClaw endpoints, and admin setup details."
   },
   "trustTier": "community",
-  "designBrief": "https://github.com/brxtrac/tracabot/blob/6741e649c5be43c05da09585846af4fefce4b76a/docs/DESIGN_BRIEF.md",
-  "demo": "https://github.com/brxtrac/tracabot/blob/6741e649c5be43c05da09585846af4fefce4b76a/docs/DEMO.md",
-  "promotionPath": "TRACaBot keeps weak observations, watchlists, join-challenge state, and review queues in local operational working memory. Accepted reports, fraud findings, moderation actions, appeals, reviews, and campaign clusters are written to DKG v10 Shared Memory with structured actors, indicators, confidence, provenance, and correction fields. High-confidence accepted reports, findings, and executed bans are targeted for Context Graph publication so downstream agents and future context oracles can consume stable fraud intelligence while corrections remain auditable.",
-  "fitNotes": "TRACaBot advances the LLM-Wiki and autoresearch direction by turning Telegram moderation into reusable, explainable, contested knowledge. OpenClaw agents can scan targets, explain decisions, inspect watchlists and digests, query campaigns, submit appeals, and record reviews without bypassing Telegram enforcement safeguards."
+  "designBrief": "https://github.com/brxtrac/tracabot/blob/3ea6ee90cb7130fe2c85174576f18d8f1da59c50/docs/DESIGN_BRIEF.md",
+  "demo": "https://github.com/brxtrac/tracabot/blob/3ea6ee90cb7130fe2c85174576f18d8f1da59c50/docs/DEMO.md",
+  "promotionPath": "TRACaBot keeps weak reports, watches, digests, and one-off join challenge state in local working memory. Evidence-backed reports, fraud findings, restrictions, bans, appeals, reviews, campaign roots, and selected high-confidence channel observations are staged through DKG Working Memory assertions when available and promoted to Shared Working Memory, with compatibility fallback to direct SHARE. High-confidence accepted reports, fraud findings, executed bans, admin-reviewed decisions, and repeated campaign roots are shaped as structured event entities for targeted publication and later Verified Memory/context-oracle consumption.",
+  "fitNotes": "TRACaBot applies the LLM-Wiki/autoresearch pattern to Telegram fraud defense: communities and OpenClaw agents produce structured claims, evidence, counter-evidence, appeals, reviews, and campaign clusters that can be queried and corrected across deployments instead of remaining isolated chat moderation events."
 }
