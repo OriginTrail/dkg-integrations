@@ -10,7 +10,7 @@
     "name": "brxtrac"
   },
   "repo": "https://github.com/brxtrac/tracabot",
-  "commit": "3ea6ee90cb7130fe2c85174576f18d8f1da59c50",
+  "commit": "d21554cb6ac30715860266620c3780db9c734ce8",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0",
   "memoryLayers": ["WM", "SWM"],
@@ -58,8 +58,8 @@
     "notes": "TRACaBot keeps DKG auth and OpenClaw credentials in the operator's local environment and does not print them in group chat. It has no preinstall/postinstall scripts, no remote code loading, no internal DKG v10 package imports, no daemon patches, and no endorsement/voting or Conviction UX. Curator-authority SHARE/PUBLISH operations are explicit runtime writes through the configured local DKG/OpenClaw adapter. Public Telegram replies redact internal UALs, graph names, OpenClaw endpoints, and admin setup details."
   },
   "trustTier": "community",
-  "designBrief": "https://github.com/brxtrac/tracabot/blob/3ea6ee90cb7130fe2c85174576f18d8f1da59c50/docs/DESIGN_BRIEF.md",
-  "demo": "https://github.com/brxtrac/tracabot/blob/3ea6ee90cb7130fe2c85174576f18d8f1da59c50/docs/DEMO.md",
+  "designBrief": "https://github.com/brxtrac/tracabot/blob/d21554cb6ac30715860266620c3780db9c734ce8/docs/DESIGN_BRIEF.md",
+  "demo": "https://github.com/brxtrac/tracabot/blob/d21554cb6ac30715860266620c3780db9c734ce8/docs/DEMO.md",
   "promotionPath": "TRACaBot keeps weak reports, watches, digests, and one-off join challenge state in local working memory. Evidence-backed reports, fraud findings, restrictions, bans, appeals, reviews, campaign roots, and selected high-confidence channel observations are staged through DKG Working Memory assertions when available and promoted to Shared Working Memory, with compatibility fallback to direct SHARE. High-confidence accepted reports, fraud findings, executed bans, admin-reviewed decisions, and repeated campaign roots are shaped as structured event entities for targeted publication and later Verified Memory/context-oracle consumption.",
   "fitNotes": "TRACaBot applies the LLM-Wiki/autoresearch pattern to Telegram fraud defense: communities and OpenClaw agents produce structured claims, evidence, counter-evidence, appeals, reviews, and campaign clusters that can be queried and corrected across deployments instead of remaining isolated chat moderation events."
 }
