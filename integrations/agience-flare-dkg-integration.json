@@ -43,7 +43,7 @@
   },
   "trustTier": "community",
   "designBrief": "https://github.com/Muffinman75/agience-flare-dkg-integration/blob/main/DESIGN_BRIEF.md",
-  "demo": "https://youtu.be/0Zm8R3vQzgU",
+  "demo": "https://youtu.be/GToqbekFdPc",
   "promotionPath": "Artifacts originate as draft → committed inside Agience (governance gate). Committed artifacts project into DKG Working Memory as typed agience: RDF Knowledge Assets with provenance (author, commit_receipt_id, source_artifact UAL). Curator-authorized promotion (SHARE) elevates them to Shared Memory for team-gossiped collaboration. UAL stability and the agience: predicate set are designed so Round-2 promotion to Verified Memory is a small, additive step (PUBLISH against the existing UAL with the same JSON-LD shape), and downstream context oracles can consume matured Knowledge Assets without re-typing. The integration deliberately stops at SWM in Round 1 and does not call PUBLISH/endorse/verify.",
   "fitNotes": "Round-1 fit: a platform-level governance layer that turns committed artifacts from any upstream tool (chat clients, IDEs, research notebooks) into provenance-bearing Working/Shared Memory entries — the substrate Karpathy's LLM-Wiki / autoresearch direction depends on. Complementary to single-tool plugins (ChatGPT, Slack, GitHub, Obsidian) and to the first-party `cursor-mcp-dkg`: those clients can author into a governed Agience workspace; this integration governs which artifacts reach DKG WM/SWM, with what typing, and under whose authority. Engineered for forward-compatibility with Round 2 (Verified Memory, oracles): typed agience: predicates and stable UALs make PUBLISH a one-line extension, and FLARE provides the cryptographic retrieval boundary needed for confidential oracle inputs."
 }
