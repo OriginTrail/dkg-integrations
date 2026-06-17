@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "memorygraph-dkg",
+  "name": "MemoryGraph — verifiable persistent memory for AI agents",
+  "description": "An MCP server that gives any agent (Claude Code, Claude Desktop, Cursor) durable memory it can save, recall, and share across sessions, devices, and teammates. Memories are stored as attributable RDF in DKG Working Memory and can be promoted to Shared Memory.",
+  "category": ["mcp", "agent-memory", "working-memory", "shared-memory"],
+  "maintainer": {
+    "github": "@JoeVezzani",
+    "name": "Joe Vezzani"
+  },
+  "repo": "https://github.com/JoeVezzani/memorygraph-dkg",
+  "commit": "a36ebf3ea00fed7c7a0e56e4a0c8860d9bf6fc18",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "memoryLayers": ["WM", "SWM"],
+  "v10PrimitivesUsed": ["ContextGraph", "Assertion", "KnowledgeAsset", "Entity"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["Claude Code", "Claude Desktop", "Cursor", "generic-MCP"],
+  "install": {
+    "kind": "mcp",
+    "command": "npx",
+    "args": ["-y", "memorygraph-dkg@0.1.0"],
+    "envRequired": ["DKG_API_URL", "DKG_AUTH_TOKEN"],
+    "supportedClients": ["claude-code", "claude-desktop", "cursor", "dkg-node"]
+  },
+  "security": {
+    "networkEgress": [],
+    "writeAuthority": [
+      "POST /api/context-graph/create",
+      "POST /api/assertion/create",
+      "POST /api/assertion/{name}/write",
+      "POST /api/assertion/{name}/promote"
+    ],
+    "credentialsHandled": [],
+    "notes": "Communicates only with the local DKG node (default 127.0.0.1:9200); zero external network egress. DKG auth token is handled by the installer (~/.dkg/auth.token or DKG_AUTH_TOKEN); no third-party credentials. Does NOT publish to Verified Memory (no PUBLISH/Curator VM ops) — WM write + read, with explicit-confirm WM→SWM promotion only. No preinstall/install/postinstall scripts; deps are @modelcontextprotocol/sdk and zod."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/JoeVezzani/memorygraph-dkg/blob/main/DESIGN.md",
+  "promotionPath": "Session memories land in private Working Memory via memory_save; memory_share promotes durable, vetted memories to Shared Memory for team/device visibility. A future release adds opt-in publication to Verified Memory so memories become oracle-consumable Knowledge Assets for downstream agents on the same context graph.",
+  "fitNotes": "Targets the bounty's core ask directly: persistent, verifiable memory that agents read from, write to, and trust across sessions, devices, and teams. Distinct from the first-party DKG MCP (a general coding-session bridge) by being a purpose-built agent long-term-memory layer with explicit save/recall/share verbs and DID-attributed, tag-queryable memory subgraphs."
+}
