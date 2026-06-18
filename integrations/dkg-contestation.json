@@ -1,0 +1,44 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "dkg-contestation",
+  "name": "DKG Contestation Protocol",
+  "description": "A framework-agnostic contestation protocol for DKG Shared Memory. Agents challenge and corroborate each other's knowledge claims with evidence, and a confidence model matures each claim along the trust gradient (self-attested to endorsed to consensus-verified) based on multi-agent scrutiny.",
+  "category": ["multi-agent", "trust", "verification", "shared-memory", "confidence"],
+  "maintainer": {
+    "github": "@iteotwawki"
+  },
+  "repo": "https://github.com/iteotwawki/dkg-contestation",
+  "commit": "6c4b3ddc99374938187ae60a3b9fe20fdf4e7dda",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.0-rc.17",
+  "memoryLayers": ["WM", "SWM"],
+  "v10PrimitivesUsed": ["ContextGraph", "KnowledgeAsset", "Assertion"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["Hermes", "OpenClaw", "generic-HTTP", "generic-CLI"],
+  "install": {
+    "kind": "cli",
+    "package": "@iteotwawki/dkg-contestation",
+    "version": "0.1.0",
+    "binary": "dkg-contest",
+    "envRequired": ["DKG_API_URL", "DKG_AUTH_TOKEN"],
+    "usageHint": "dkg-contest demo  (full contestation round) | dkg-contest claim \"<statement>\" | dkg-contest score graph.json  (score offline, no node). DKG_API_URL defaults to http://127.0.0.1:9200; DKG_AUTH_TOKEN is auto-filled by `dkg integration install`."
+  },
+  "security": {
+    "networkEgress": [],
+    "writeAuthority": [
+      "POST /api/context-graph/create",
+      "POST /api/knowledge-assets",
+      "POST /api/knowledge-assets/{name}/wm/write",
+      "POST /api/knowledge-assets/{name}/wm/finalize",
+      "POST /api/knowledge-assets/{name}/swm/share"
+    ],
+    "credentialsHandled": [],
+    "notes": "No third-party credentials handled; only talks to the local DKG node via its HTTP API. Writes claims, challenges, and corroborations to Working Memory and promotes them to Shared Memory via SHARE (Curator authority, listed above) so they are team-visible for contestation. Working/Shared-memory only — never publishes to Verifiable Memory / on-chain (no gas spend). The library exposes an opt-in `enableEndorse` flag that maps the 'endorsed' tier to the node's /api/endorse primitive; it is OFF by default and not used by the installed CLI, keeping the default install within Round-1 WM/SWM scope. Note: /api/endorse is a speculative route — unlike every other endpoint it was not diffable against a first-party adapter, so it is treated as a forward hook (404 non-fatal) to verify against a live node before use, never a proven path. No postinstall/preinstall scripts."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/iteotwawki/dkg-contestation/blob/main/DESIGN.md",
+  "demo": "https://github.com/iteotwawki/dkg-contestation/blob/main/demo/dkg-contest-demo.cast",
+  "promotionPath": "Claims are born in Working Memory (self-attested), promoted to Shared Memory where they accrue challenges and corroborations (endorsed), and only a claim that reaches consensus-verified after surviving multi-agent scrutiny is a candidate for Verifiable Memory / on-chain publish. The confidence model is exactly the gate that justifies the VM spend: durable publish is earned by surviving contestation, not granted on deposit. The settled (claim, confidence, tier, evidence-graph) record is ClaimReview-shaped, making it a direct input for Round-2 context-oracle consumption.",
+  "fitNotes": "Complements provenance-lineage integrations rather than competing: it consumes provenance as input evidence and produces a contestation-scored trust verdict as output. The confidence kernel is a pure function of (evidence, agent-diversity, agent-reputation) with no agent-framework coupling, designed so the same scoring logic could later serve as a Bittensor-style subnet validator mechanism."
+}
