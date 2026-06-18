@@ -38,7 +38,7 @@
   },
   "trustTier": "community",
   "designBrief": "https://github.com/iteotwawki/dkg-contestation/blob/main/DESIGN.md",
-  "demo": "https://github.com/iteotwawki/dkg-contestation/blob/main/demo/dkg-contest-demo.cast",
+  "demo": "https://youtu.be/4AVuNh6rLHA",
   "promotionPath": "Claims are born in Working Memory (self-attested), promoted to Shared Memory where they accrue challenges and corroborations (endorsed), and only a claim that reaches consensus-verified after surviving multi-agent scrutiny is a candidate for Verifiable Memory / on-chain publish. The confidence model is exactly the gate that justifies the VM spend: durable publish is earned by surviving contestation, not granted on deposit. The settled (claim, confidence, tier, evidence-graph) record is ClaimReview-shaped, making it a direct input for Round-2 context-oracle consumption.",
   "fitNotes": "Complements provenance-lineage integrations rather than competing: it consumes provenance as input evidence and produces a contestation-scored trust verdict as output. The confidence kernel is a pure function of (evidence, agent-diversity, agent-reputation) with no agent-framework coupling, designed so the same scoring logic could later serve as a Bittensor-style subnet validator mechanism."
 }
