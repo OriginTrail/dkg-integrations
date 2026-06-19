@@ -10,7 +10,7 @@
     "contact": "spangers11@gmail.com"
   },
   "repo": "https://github.com/haroldboom/github-dkg",
-  "commit": "0cd878d61cb2317d5169faa639933436c79292a8",
+  "commit": "59e5fa97556fdcc63186dd1e87067937c680f4df",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0-rc.1",
   "memoryLayers": ["WM", "SWM"],
@@ -20,7 +20,7 @@
   "install": {
     "kind": "cli",
     "package": "github-dkg",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "binary": "github-dkg",
     "envRequired": ["DKG_TOKEN", "DKG_BASE_URL", "DKG_CONTEXT_GRAPH", "GITHUB_TOKEN"],
     "usageHint": "Bulk-ingest:\n  github-dkg ingest owner/repo\nSingle item:\n  github-dkg ingest-one owner/repo 42 --type issue\nSearch:\n  github-dkg search \"query\"\nPromote WM→SWM:\n  github-dkg promote <ual>\nAll commands accept --context-graph (or read $DKG_CONTEXT_GRAPH). Also ships as a Docker-based GitHub Action: haroldboom/github-dkg@v0.1.0."
@@ -32,7 +32,7 @@
       "POST /api/assertion/{name}/promote"
     ],
     "credentialsHandled": ["GITHUB_TOKEN"],
-    "notes": "Communicates with the local DKG node (HTTP, port 9200 by default) and the GitHub REST API at api.github.com. Writes Knowledge Assets to Working Memory by default; promotion to Shared Working Memory (POST /api/assertion/{name}/promote) is always explicit and never automatic — the bundled GitHub Action example workflow gates promotion on a PR label (`architecture-decision`) so the choice is the team's, not the integration's. PUBLISH (Verified Memory) is never called. GitHub rate-limit responses (403/429 with X-RateLimit-Remaining: 0) surface as a typed GitHubRateLimitError carrying the reset timestamp, so callers can back off rather than retry into a ban. 23/23 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. Verified compatible with DKG v10 rc.8 and dkg SDK 8.1.1rc2 (2026-06-09). No postinstall/preinstall scripts. Published to PyPI via `pypa/gh-action-pypi-publish@release/v1` with `attestations: true` under PyPI Trusted Publishing (workflow `publish.yml`, environment `pypi`) — wheel ships with a PEP-740 attestation signed by the GitHub Actions runner, fetchable at `https://pypi.org/integrity/github-dkg/0.1.2/<file>/provenance`."
+    "notes": "Communicates with the local DKG node (HTTP, port 9200 by default) and the GitHub REST API at api.github.com. Writes Knowledge Assets to Working Memory by default; promotion to Shared Working Memory (POST /api/assertion/{name}/promote) is always explicit and never automatic — the bundled GitHub Action example workflow gates promotion on a PR label (`architecture-decision`) so the choice is the team's, not the integration's. PUBLISH (Verified Memory) is never called. GitHub rate-limit responses (403/429 with X-RateLimit-Remaining: 0) surface as a typed GitHubRateLimitError carrying the reset timestamp, so callers can back off rather than retry into a ban. 23/23 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. No postinstall/preinstall scripts. Published to PyPI via `pypa/gh-action-pypi-publish@release/v1` with `attestations: true` under PyPI Trusted Publishing (workflow `publish.yml`, environment `pypi`) — wheel ships with a PEP-740 attestation signed by the GitHub Actions runner, fetchable at `https://pypi.org/integrity/github-dkg/0.1.3/<file>/provenance`. v0.1.3 (2026-06-19) verifies compatibility with the DKG v10 node at 10.0.0-rc.17: the rc.2→rc.17 node changelog was reviewed for every HTTP endpoint this ingester calls (POST /api/context-graph/create, /api/memory/turn, /api/memory/search, /api/assertion/{name}/promote, /api/query) — the only request-shape change in that window (rc.12 dropping the deprecated participantIdentityIds/requiredSignatures from context-graph/create) is already non-breaking here; no source/API changes, 23/23 unit tests green."
   },
   "trustTier": "community",
   "designBrief": "https://github.com/haroldboom/github-dkg/blob/master/DESIGN_BRIEF.md",
