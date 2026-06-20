@@ -10,7 +10,7 @@
     "name": "Jaka Pelko"
   },
   "repo": "https://github.com/jakepel03/obsidian-dkg-plugin",
-  "commit": "4f11d9260b8a44a80e4433b9f24717b3d59080a4",
+  "commit": "c935e06481bf83bd45356346ca8f6d6a38c1a3ef",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0-rc.18",
   "memoryLayers": ["WM", "SWM"],
