@@ -10,9 +10,9 @@
     "name": "Jaka Pelko"
   },
   "repo": "https://github.com/jakepel03/obsidian-dkg-plugin",
-  "commit": "0bba40e7f2989f31b7fa9072163a0460feee2853",
+  "commit": "4f11d9260b8a44a80e4433b9f24717b3d59080a4",
   "license": "MIT",
-  "requiresDkgNodeVersion": ">=10.0.0-rc.17",
+  "requiresDkgNodeVersion": ">=10.0.0-rc.18",
   "memoryLayers": ["WM", "SWM"],
   "v10PrimitivesUsed": ["ContextGraph", "Assertion", "Entity", "Curator", "UAL"],
   "publicInterfacesUsed": ["http-api"],
@@ -25,6 +25,7 @@
     "networkEgress": [],
     "writeAuthority": [
       "POST /api/context-graph/create",
+      "POST /api/context-graph/register [on-chain registration of an Open/public project: one-time, gas-only; NOT a Verified Memory publish of any note]",
       "POST /api/context-graph/subscribe",
       "POST /api/context-graph/unsubscribe",
       "POST /api/context-graph/{id}/sign-join",
@@ -39,11 +40,11 @@
       "POST /api/knowledge-assets/{name}/wm/discard"
     ],
     "credentialsHandled": [],
-    "notes": "Communicates only with the local DKG node (default http://127.0.0.1:9200); no external network egress. The DKG auth token is entered in plugin settings and stored only in the vault's local plugin data; it is sent only as a Bearer header to the local node. Notes are written to Working Memory via knowledge-assets wm/import-file and semantic-enrichment/write. The only Curator-authority SHARE is POST /api/knowledge-assets/{name}/swm/share (WM to SWM), invoked only on an explicit user action (sharing a note to a project, or a folder rule the user configured); never automatically and never to Verified Memory. Membership operations (approve-join / reject-join / add-participant / remove-participant) are Curator-authority and run only when the user manages their own project. No Verified Memory (PUBLISH) operations. Distributed as an Obsidian plugin (prebuilt main.js / manifest.json / styles.css committed to the repo), not an npm or docker package, so there are no install/preinstall/postinstall scripts; install is manual."
+    "notes": "Communicates only with the local DKG node (default http://127.0.0.1:9200); no external network egress. The DKG auth token is entered in plugin settings and stored only in the vault's local plugin data; it is sent only as a Bearer header to the local node. Notes are written to Working Memory via knowledge-assets wm/import-file and semantic-enrichment/write. The only Curator-authority SHARE is POST /api/knowledge-assets/{name}/swm/share (WM to SWM), invoked only on an explicit user action (sharing a note to a project, or a folder rule the user configured); never automatically and never to Verified Memory. Membership operations (approve-join / reject-join / add-participant / remove-participant) are Curator-authority and run only when the user manages their own project. No Verified Memory (PUBLISH) operations. When a member forks a shared note, the plugin reads the author's full Markdown over the node's P2P layer (a read via knowledge-assets/import-artifact/read-markdown). Distributed as an Obsidian plugin (prebuilt main.js / manifest.json / styles.css committed to the repo), not an npm or docker package, so there are no install/preinstall/postinstall scripts; install is manual."
   },
   "trustTier": "community",
   "designBrief": "https://github.com/jakepel03/obsidian-dkg-plugin/blob/main/docs/DESIGN_BRIEF.md",
-  "demo": "https://youtu.be/vsodFJewLPI",
+  "demo": "https://youtu.be/594c1cS0fgo",
   "promotionPath": "Each note is imported into the vault's private Working Memory context graph as an assertion, then enriched with resolved-wikilink and filename-title triples (provenance-tagged) so the graph stays connected. A note matures to Shared Memory only on an explicit user action - 'Share current note to a project' or a folder-to-project rule - which calls POST /api/knowledge-assets/{name}/swm/share to gossip its triples into the project's Shared Memory for subscribed members. Verified Memory is intentionally out of scope for this beta; assertions keep stable assertion URIs (UALs) so a future Curator PUBLISH step could anchor team-validated notes on-chain without reshaping the data, at which point they become oracle-consumable.",
   "fitNotes": "Obsidian is where a large existing community already authors personal knowledge. This is the human-authoring on-ramp to the DKG: it turns each user's vault into queryable, provenance-aware WM/SWM that teammates and AI agents (via the same node's HTTP/MCP surface) can discover and build on - complementing the agent/CLI/MCP-authored entries already in the registry. The per-note private-to-shared gradient the user controls maps directly onto the WM-to-SWM trust gradient of the LLM-Wiki / autoresearch model."
 }
