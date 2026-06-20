@@ -44,7 +44,7 @@
   },
   "trustTier": "community",
   "designBrief": "https://github.com/jakepel03/obsidian-dkg-plugin/blob/main/docs/DESIGN_BRIEF.md",
-  "demo": "https://youtu.be/594c1cS0fgo",
+  "demo": "https://youtu.be/3zPkJOdnC38",
   "promotionPath": "Each note is imported into the vault's private Working Memory context graph as an assertion, then enriched with resolved-wikilink and filename-title triples (provenance-tagged) so the graph stays connected. A note matures to Shared Memory only on an explicit user action - 'Share current note to a project' or a folder-to-project rule - which calls POST /api/knowledge-assets/{name}/swm/share to gossip its triples into the project's Shared Memory for subscribed members. Verified Memory is intentionally out of scope for this beta; assertions keep stable assertion URIs (UALs) so a future Curator PUBLISH step could anchor team-validated notes on-chain without reshaping the data, at which point they become oracle-consumable.",
   "fitNotes": "Obsidian is where a large existing community already authors personal knowledge. This is the human-authoring on-ramp to the DKG: it turns each user's vault into queryable, provenance-aware WM/SWM that teammates and AI agents (via the same node's HTTP/MCP surface) can discover and build on - complementing the agent/CLI/MCP-authored entries already in the registry. The per-note private-to-shared gradient the user controls maps directly onto the WM-to-SWM trust gradient of the LLM-Wiki / autoresearch model."
 }
