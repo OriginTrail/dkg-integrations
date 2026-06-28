@@ -11,7 +11,7 @@
     "contact": "manojmodhwadia@outlook.com"
   },
   "repo": "https://github.com/Muffinman75/agience-flare-dkg-integration",
-  "commit": "f63641905ac135b3caf39d0e76ab97d06f0e431a",
+  "commit": "08a00810092dc5fd2d5b32b289ee139d72fc9d13",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.1",
   "memoryLayers": ["WM", "SWM", "VM"],
@@ -21,10 +21,10 @@
   "install": {
     "kind": "cli",
     "package": "agience-flare-dkg-integration",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "binary": "agience-dkg",
     "envRequired": ["DKG_BASE_URL"],
-    "usageHint": "Install: `pipx install agience-flare-dkg-integration==0.4.3`. Default transport is the local DKG v10 daemon (DKG_BASE_URL=http://127.0.0.1:9201; bearer token auto-read from ~/.dkg/auth.token). MCP transport supported via `--transport mcp` (requires DKG_TOKEN). Governed-mode (`--from-agience-artifact`) reads AGIENCE_BASE_URL + AGIENCE_TOKEN — point these at the hosted Agience SaaS (https://my.agience.ai) so no local Agience stack is needed. npm wrapper published as alternative."
+    "usageHint": "Install: `pipx install agience-flare-dkg-integration==0.4.4`. Default transport is the local DKG v10 daemon (DKG_BASE_URL=http://127.0.0.1:9201; bearer token auto-read from ~/.dkg/auth.token). MCP transport supported via `--transport mcp` (requires DKG_TOKEN); default port 8083 matches the reference `dkg-node/apps/agent` setup, use 8081 for the DKG Edge Node Agent Web UI/API. CLI: `agience-dkg share` (v10.0.1 SHARE), `promote` is a backward-compatible alias. Governed-mode (`--from-agience-artifact`) reads AGIENCE_BASE_URL + AGIENCE_TOKEN — point these at the hosted Agience SaaS (https://my.agience.ai) so no local Agience stack is needed. npm wrapper published as alternative."
   },
   "security": {
     "networkEgress": [
@@ -34,16 +34,16 @@
     "writeAuthority": [
       "daemon (v10.0.1) — POST /api/knowledge-assets (+ /{name}/wm/write) — WM KA create + quad append (finalize:false); legacy fallback /api/assertion/create on 404",
       "daemon transport — POST /api/shared-memory/write — direct Shared Memory write (layer=swm)",
-      "daemon (v10.0.1) — POST /api/knowledge-assets/{name}/swm/share — Shared Memory promotion (SHARE, Curator-authority); legacy fallback /api/assertion/{name}/promote on 404",
+      "daemon (v10.0.1) — POST /api/knowledge-assets/{name}/swm/share — Shared Memory SHARE (historically called promote); legacy fallback /api/assertion/{name}/promote on 404",
       "daemon (v10.0.1) — POST /api/knowledge-assets/{name}/vm/publish — Verifiable Memory publish (PUBLISH, Curator-authority, on-chain); operator-initiated via vm-publish only",
       "daemon transport — POST /api/query — read-only SPARQL SELECT for memory search",
       "daemon transport — GET /api/status — health probe",
       "MCP transport (alternative) — POST /mcp -> tools/call dkg-create (privacy=private) — Working Memory write",
-      "MCP transport — POST /mcp -> tools/call dkg-create (privacy=public) — Shared Memory promotion (SHARE, Curator-authority)",
+      "MCP transport — POST /mcp -> tools/call dkg-create (privacy=public) — Shared Memory SHARE (Curator-authority)",
       "MCP transport — POST /mcp -> tools/call dkg-sparql-query — read-only memory search"
     ],
     "credentialsHandled": ["AGIENCE_TOKEN"],
-    "notes": "Distribution: dual-published with build provenance to npm (https://www.npmjs.com/package/agience-flare-dkg-integration) and PyPI (https://pypi.org/project/agience-flare-dkg-integration/0.4.3/) via tag-triggered GitHub Actions. The npm package is a thin wrapper (zero runtime deps) that delegates to the Python CLI on PyPI. npm publish uses `--provenance --access public` (SLSA v1, sigstore log); PyPI uses pypa/gh-action-pypi-publish with attestations: true. No preinstall/install/postinstall scripts — Section 8a compliant. No dynamic code loading, no eval on remote input. Transport: default is the local OriginTrail DKG v10 daemon over HTTP (DKG_BASE_URL=http://127.0.0.1:9201, bearer token auto-read from ~/.dkg/auth.token); MCP Streamable HTTP remains a fully-supported alternative (`--transport mcp`, requires DKG_TOKEN). Both are stable v10 public interfaces per bounty Section 5. Egress: only the local DKG daemon (or MCP node) by default; governed-mode optionally calls an operator-configured Agience endpoint (AGIENCE_BASE_URL; hosted default https://my.agience.ai); FLARE service is opt-in and disabled by default. Curator-authority surface: SHARE is invoked only when an operator explicitly runs the `promote` CLI command or the equivalent Python API; PUBLISH/VM is exposed via the operator-initiated `vm-publish` command (daemon-only, never automatic); endorse/verify remain out of scope for Round 1. Governed-mode (`--from-agience-artifact`) refuses to project unless the upstream Agience artifact's state is `committed`, attaching the commit_receipt_id to the Knowledge Asset for auditability. pip-audit --production is clean. This integration repo: 87 tests (82 unit + 5 integration; governance-flow tests transport-agnostic). For context (not summed): Agience Core adds 11 DKG-projection-service tests, and FLARE — now part of Agience Core — carries 101 cryptographic-search tests. 6-month maintenance commitment — see docs/maintainer-statement.md."
+    "notes": "Distribution: dual-published with build provenance to npm (https://www.npmjs.com/package/agience-flare-dkg-integration) and PyPI (https://pypi.org/project/agience-flare-dkg-integration/0.4.4/) via tag-triggered GitHub Actions. The npm package is a thin wrapper (zero runtime deps) that delegates to the Python CLI on PyPI. npm publish uses `--provenance --access public` (SLSA v1, sigstore log); PyPI uses pypa/gh-action-pypi-publish with attestations: true. No preinstall/install/postinstall scripts — Section 8a compliant. No dynamic code loading, no eval on remote input. Transport: default is the local OriginTrail DKG v10 daemon over HTTP (DKG_BASE_URL=http://127.0.0.1:9201, bearer token auto-read from ~/.dkg/auth.token); MCP Streamable HTTP remains a fully-supported alternative (`--transport mcp`, requires DKG_TOKEN). Both are stable v10 public interfaces per bounty Section 5. Egress: only the local DKG daemon (or MCP node) by default; governed-mode optionally calls an operator-configured Agience endpoint (AGIENCE_BASE_URL; hosted default https://my.agience.ai); FLARE service is opt-in and disabled by default. Curator-authority surface: SHARE is invoked only when an operator explicitly runs the `share` CLI command (or the backward-compatible `promote` alias) or the equivalent Python API; PUBLISH/VM is exposed via the operator-initiated `vm-publish` command (daemon-only, never automatic); endorse/verify remain out of scope for Round 1. Governed-mode (`--from-agience-artifact`) refuses to project unless the upstream Agience artifact's state is `committed`, attaching the commit_receipt_id to the Knowledge Asset for auditability. pip-audit --production is clean. This integration repo: 87 tests (82 unit + 5 integration; governance-flow tests transport-agnostic). For context (not summed): Agience Core adds 11 DKG-projection-service tests, and FLARE — now part of Agience Core — carries 101 cryptographic-search tests. 6-month maintenance commitment — see docs/maintainer-statement.md."
   },
   "trustTier": "community",
   "designBrief": "https://github.com/Muffinman75/agience-flare-dkg-integration/blob/main/DESIGN_BRIEF.md",
