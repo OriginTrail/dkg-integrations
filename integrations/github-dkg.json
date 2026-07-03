@@ -36,7 +36,7 @@
   },
   "trustTier": "community",
   "designBrief": "https://github.com/haroldboom/github-dkg/blob/master/DESIGN_BRIEF.md",
-  "demo": "https://youtu.be/9Tgb4-OXGuk",
+  "demo": "https://youtu.be/pfICj9VR1gE",
   "promotionPath": "Issues, PRs, and review comments land in Working Memory as Knowledge Assets at ingest time. The integration exposes an explicit `promote` operation (CLI: `github-dkg promote <ual>`; programmatic: `GitHubDKGIngestor.promote(turn_uri)`) that calls POST /api/assertion/{name}/promote to graduate selected assets to Shared Working Memory — `examples/workflow.yml` shows the canonical gate (closed+merged PR + label `architecture-decision`). Verified Memory promotion is intentionally not automated by the package; a downstream Curator step (POST /api/shared-memory/publish) anchors team-validated decisions on-chain when warranted, at which point those assets become consumable by context oracles for downstream agents reasoning about the project's history.",
   "fitNotes": "Targets the auto-research direction by closing the loop on engineering tacit knowledge: issue threads, PR descriptions, and review comments — the highest-signal substrate inside any software organisation — become first-class, attributable, queryable assets on the DKG. Pairs naturally with langchain-dkg (sister Round 1 submission, also under the haroldboom account): github-dkg writes the substrate, langchain-dkg gives any LangChain agent persistent memory backed by it."
 }
