@@ -4,35 +4,63 @@
   "slug": "github-dkg",
   "name": "GitHub Knowledge Ingest for DKG v10",
   "description": "Ingests GitHub issues, pull requests, and review comments into DKG v10 Working Memory as Knowledge Assets. Each item becomes one tri-modal asset (markdown + structural triples + embedding); architecture-decision PRs can be promoted to Shared Working Memory for team-wide visibility. Ships as a CLI and a Docker-based GitHub Action that fires on issue / pull_request / pull_request_review events.",
-  "category": ["ingestion", "github", "working-memory", "shared-memory", "engineering", "provenance"],
+  "category": [
+    "ingestion",
+    "github",
+    "working-memory",
+    "shared-memory",
+    "engineering",
+    "provenance"
+  ],
   "maintainer": {
     "github": "@haroldboom",
     "contact": "spangers11@gmail.com"
   },
   "repo": "https://github.com/haroldboom/github-dkg",
-  "commit": "a30f1d46071deaf377d91dc2fdffdd3e21b8ea4e",
+  "commit": "2144ed4cbb7fd5bf74239408b93801e0f9a20ea0",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0-rc.1",
-  "memoryLayers": ["WM", "SWM"],
-  "v10PrimitivesUsed": ["ContextGraph", "Assertion", "KnowledgeAsset"],
-  "publicInterfacesUsed": ["http-api"],
-  "targetAgents": ["generic-CLI", "generic-HTTP"],
+  "memoryLayers": [
+    "WM",
+    "SWM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "Assertion",
+    "KnowledgeAsset"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "generic-CLI",
+    "generic-HTTP"
+  ],
   "install": {
     "kind": "cli",
     "package": "github-dkg",
     "version": "0.1.4",
     "binary": "github-dkg",
-    "envRequired": ["DKG_TOKEN", "DKG_BASE_URL", "DKG_CONTEXT_GRAPH", "GITHUB_TOKEN"],
+    "envRequired": [
+      "DKG_TOKEN",
+      "DKG_BASE_URL",
+      "DKG_CONTEXT_GRAPH",
+      "GITHUB_TOKEN"
+    ],
     "usageHint": "Bulk-ingest:\n  github-dkg ingest owner/repo\nSingle item:\n  github-dkg ingest-one owner/repo 42 --type issue\nSearch:\n  github-dkg search \"query\"\nPromote WM→SWM:\n  github-dkg promote <ual>\nAll commands accept --context-graph (or read $DKG_CONTEXT_GRAPH). Also ships as a Docker-based GitHub Action: haroldboom/github-dkg@v0.1.0."
   },
   "security": {
-    "networkEgress": ["api.github.com"],
+    "networkEgress": [
+      "api.github.com"
+    ],
     "writeAuthority": [
       "POST /api/memory/turn",
       "POST /api/assertion/{name}/promote"
     ],
-    "credentialsHandled": ["GITHUB_TOKEN"],
-    "notes": "Communicates with the local DKG node (HTTP, port 9200 by default) and the GitHub REST API at api.github.com. Writes Knowledge Assets to Working Memory by default; promotion to Shared Working Memory (POST /api/assertion/{name}/promote) is always explicit and never automatic — the bundled GitHub Action example workflow gates promotion on a PR label (`architecture-decision`) so the choice is the team's, not the integration's. PUBLISH (Verified Memory) is never called. GitHub rate-limit responses (403/429 with X-RateLimit-Remaining: 0) surface as a typed GitHubRateLimitError carrying the reset timestamp, so callers can back off rather than retry into a ban. 23/23 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. No postinstall/preinstall scripts. Published to PyPI via `pypa/gh-action-pypi-publish@release/v1` with `attestations: true` under PyPI Trusted Publishing (workflow `publish.yml`, environment `pypi`) — wheel ships with a PEP-740 attestation signed by the GitHub Actions runner, fetchable at `https://pypi.org/integrity/github-dkg/0.1.4/<file>/provenance`. Releases are verification-tracked against the DKG v10 node: v0.1.3 (2026-06-19) verified node rc.17; v0.1.4 (2026-06-23) verifies node rc.19 — every daemon route this ingester calls was diffed across rc.17→rc.18→rc.19, with /api/memory/turn, /api/memory/search, /api/query and GET /api/agents byte-identical, /api/context-graph/create gaining only an additive `contextGraphId` alias for `id` (#1102), and the opt-in /api/assertion/* promote path gaining only new 503 CURATOR_UNCONFIRMED / 409 CURATOR_REJECTED error codes (OT-RFC-49); existing request contracts unchanged, 23/23 unit tests green."
+    "credentialsHandled": [
+      "GITHUB_TOKEN"
+    ],
+    "notes": "Communicates with the local DKG node (HTTP, port 9200 by default) and the GitHub REST API at api.github.com. Writes Knowledge Assets to Working Memory by default; promotion to Shared Working Memory (POST /api/assertion/{name}/promote) is always explicit and never automatic — the bundled GitHub Action example workflow gates promotion on a PR label (`architecture-decision`) so the choice is the team's, not the integration's. PUBLISH (Verified Memory) is never called. GitHub rate-limit responses (403/429 with X-RateLimit-Remaining: 0) surface as a typed GitHubRateLimitError carrying the reset timestamp, so callers can back off rather than retry into a ban. 23/23 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. No postinstall/preinstall scripts. Published to PyPI via `pypa/gh-action-pypi-publish@release/v1` with `attestations: true` under PyPI Trusted Publishing (workflow `publish.yml`, environment `pypi`) — wheel ships with a PEP-740 attestation signed by the GitHub Actions runner, fetchable at `https://pypi.org/integrity/github-dkg/0.1.4/<file>/provenance`. Releases are verification-tracked against the DKG v10 node: v0.1.3 (2026-06-19) verified node rc.17; v0.1.4 (2026-06-23) verifies node rc.19 — every daemon route this ingester calls was diffed across rc.17→rc.18→rc.19, with /api/memory/turn, /api/memory/search, /api/query and GET /api/agents byte-identical, /api/context-graph/create gaining only an additive `contextGraphId` alias for `id` (#1102), and the opt-in /api/assertion/* promote path gaining only new 503 CURATOR_UNCONFIRMED / 409 CURATOR_REJECTED error codes (OT-RFC-49); existing request contracts unchanged, 23/23 unit tests green. Post-review hardening (commit 2144ed4, 2026-07-04, verified against node build 10.0.2): GitHub rate limits now raise typed errors with reset times (secondary limits honored via Retry-After); bulk ingest streams tasks and preserves partial results on failure; action.yml output mappings fixed for Docker actions; entrypoint validates all required env vars with ::error:: annotations; non-root Docker image; promote ported to the async knowledge-assets share job flow with legacy fallback; memory/search always sends explicit memoryLayers; comment truncation is marked and multi-line bodies are indented to prevent attribution spoofing; 63 unit tests + ruff/mypy in CI; publish workflow gated on tests and a tag/version check."
   },
   "trustTier": "community",
   "designBrief": "https://github.com/haroldboom/github-dkg/blob/master/DESIGN_BRIEF.md",
