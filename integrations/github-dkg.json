@@ -39,7 +39,7 @@
   "install": {
     "kind": "cli",
     "package": "github-dkg",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "binary": "github-dkg",
     "envRequired": [
       "DKG_TOKEN",
@@ -47,7 +47,7 @@
       "DKG_CONTEXT_GRAPH",
       "GITHUB_TOKEN"
     ],
-    "usageHint": "Bulk-ingest:\n  github-dkg ingest owner/repo\nSingle item:\n  github-dkg ingest-one owner/repo 42 --type issue\nSearch:\n  github-dkg search \"query\"\nPromote WM→SWM:\n  github-dkg promote <ual>\nAll commands accept --context-graph (or read $DKG_CONTEXT_GRAPH). Also ships as a Docker-based GitHub Action: haroldboom/github-dkg@v0.1.0."
+    "usageHint": "Bulk-ingest:\n  github-dkg ingest owner/repo\nSingle item:\n  github-dkg ingest-one owner/repo 42 --type issue\nSearch:\n  github-dkg search \"query\"\nPromote WM→SWM:\n  github-dkg promote <ual>\nAll commands accept --context-graph (or read $DKG_CONTEXT_GRAPH). Also ships as a Docker-based GitHub Action: haroldboom/github-dkg@v0.1.5. Create the graph first: github-dkg create-context-graph <name>."
   },
   "security": {
     "networkEgress": [
@@ -55,7 +55,8 @@
     ],
     "writeAuthority": [
       "POST /api/memory/turn",
-      "POST /api/assertion/{name}/promote"
+      "POST /api/context-graph/create",
+      "POST /api/knowledge-assets/{name}/swm/share-async (SHARE, Curator authority; legacy fallback POST /api/assertion/{name}/promote-async)"
     ],
     "credentialsHandled": [
       "GITHUB_TOKEN"
