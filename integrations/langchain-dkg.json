@@ -4,26 +4,44 @@
   "slug": "langchain-dkg",
   "name": "LangChain DKG Adapter",
   "description": "LangChain memory and retriever components backed by OriginTrail DKG v10. Gives LangChain agents durable, verifiable, queryable memory — conversation history is stored as Knowledge Assets in Working Memory and retrieved via tri-modal search (vector + SPARQL + text).",
-  "category": ["working-memory", "retrieval", "python", "langchain", "rag"],
+  "category": [
+    "working-memory",
+    "retrieval",
+    "python",
+    "langchain",
+    "rag"
+  ],
   "maintainer": {
     "github": "@haroldboom",
     "contact": "spangers11@gmail.com"
   },
   "repo": "https://github.com/haroldboom/dkg-langchain",
-  "commit": "e0fb1e73152b62f029238fbdd276a99555256bd3",
+  "commit": "70196226d49cc4c253236817acd10f3bce574193",
   "license": "MIT",
   "requiresDkgNodeVersion": ">=10.0.0",
-  "memoryLayers": ["WM", "SWM"],
-  "v10PrimitivesUsed": ["UAL", "KnowledgeAsset", "ContextGraph", "Assertion"],
-  "publicInterfacesUsed": ["http-api"],
-  "targetAgents": ["AutoResearch", "generic-HTTP", "generic-CLI"],
-
+  "memoryLayers": [
+    "WM",
+    "SWM"
+  ],
+  "v10PrimitivesUsed": [
+    "UAL",
+    "KnowledgeAsset",
+    "ContextGraph",
+    "Assertion"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "AutoResearch",
+    "generic-HTTP",
+    "generic-CLI"
+  ],
   "install": {
     "kind": "manual",
     "docsUrl": "https://github.com/haroldboom/dkg-langchain#readme",
     "oneLiner": "pip install langchain-dkg==0.1.8 — then set DKG_API_URL and DKG_TOKEN and import DKGChatMessageHistory, DKGMemory, or DKGRetriever."
   },
-
   "security": {
     "networkEgress": [],
     "writeAuthority": [
@@ -31,11 +49,9 @@
       "POST /api/assertion/{name}/promote"
     ],
     "credentialsHandled": [],
-    "notes": "Communicates only with the local DKG node (default localhost:9200) — no external network egress. Credentials are read from the DKG_TOKEN environment variable or passed explicitly to DKGClient; never hardcoded. POST /api/memory/turn stores conversation turns as Knowledge Assets in Working Memory. POST /api/assertion/{name}/promote is a Curator-authority SHARE operation that moves a turn to Shared Working Memory; this is always explicit and agent-initiated, never automatic. No Verified Memory (PUBLISH) operations are performed. 34/34 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. The package has no postinstall, install, or preinstall scripts. Published to PyPI via `pypa/gh-action-pypi-publish@release/v1` with `attestations: true` under PyPI Trusted Publishing (workflow `publish.yml`, environment `pypi`) — wheel ships with a PEP-740 attestation signed by the GitHub Actions runner, fetchable at `https://pypi.org/integrity/langchain-dkg/0.1.8/<file>/provenance`. Releases are verification-tracked against the DKG v10 node: v0.1.4 raised the langchain-core floor to >=1.3.3 (CVE-2026-44843); v0.1.5 verified node rc.17; v0.1.6 (2026-06-23) verified node rc.19 — every daemon route this adapter calls was diffed across rc.17→rc.19, with the core endpoints (/api/memory/turn, /api/memory/search, /api/query, GET /api/agents) byte-identical and only additive changes to /api/context-graph/create (#1102 contextGraphId alias) and the opt-in SHARE paths (new optional params + 503/409 curator-ack codes, OT-RFC-49); contracts unchanged. v0.1.7 fixes shared_memory_write/assertion_write to send node-shaped quad objects ({subject,predicate,object}), required since rc.19. v0.1.8 (2026-06-23) maps the SHARE-path 503/409 curator-ack responses to typed CuratorUnconfirmedError/CuratorRejectedError; 34/34 unit tests green."
+    "notes": "Communicates only with the local DKG node (default localhost:9200) — no external network egress. Credentials are read from the DKG_TOKEN environment variable or passed explicitly to DKGClient; never hardcoded. POST /api/memory/turn stores conversation turns as Knowledge Assets in Working Memory. POST /api/assertion/{name}/promote is a Curator-authority SHARE operation that moves a turn to Shared Working Memory; this is always explicit and agent-initiated, never automatic. No Verified Memory (PUBLISH) operations are performed. 34/34 unit tests pass against the published wheel (verified in a fresh venv outside the source tree); GitHub Actions CI runs the suite on Python 3.10/3.11/3.12 for every push and PR. The package has no postinstall, install, or preinstall scripts. Published to PyPI via `pypa/gh-action-pypi-publish@release/v1` with `attestations: true` under PyPI Trusted Publishing (workflow `publish.yml`, environment `pypi`) — wheel ships with a PEP-740 attestation signed by the GitHub Actions runner, fetchable at `https://pypi.org/integrity/langchain-dkg/0.1.8/<file>/provenance`. Releases are verification-tracked against the DKG v10 node: v0.1.4 raised the langchain-core floor to >=1.3.3 (CVE-2026-44843); v0.1.5 verified node rc.17; v0.1.6 (2026-06-23) verified node rc.19 — every daemon route this adapter calls was diffed across rc.17→rc.19, with the core endpoints (/api/memory/turn, /api/memory/search, /api/query, GET /api/agents) byte-identical and only additive changes to /api/context-graph/create (#1102 contextGraphId alias) and the opt-in SHARE paths (new optional params + 503/409 curator-ack codes, OT-RFC-49); contracts unchanged. v0.1.7 fixes shared_memory_write/assertion_write to send node-shaped quad objects ({subject,predicate,object}), required since rc.19. v0.1.8 (2026-06-23) maps the SHARE-path 503/409 curator-ack responses to typed CuratorUnconfirmedError/CuratorRejectedError; 34/34 unit tests green. Post-review hardening (commit 7019622, 2026-07-04, verified against node build 10.0.2): conversation turns now default to private Working Memory (layer=\"wm\") instead of the node's gossiped swm default; session-scoped history retrieval (client-side hasPart filter + chronological order); promote ported to the async knowledge-assets share job flow with legacy fallback; memory/search always sends explicit memoryLayers; typed DKGConnectionError/DKGStatusError wrap all transport errors; pooled HTTP client; 80 unit tests + ruff/mypy in CI; publish workflow now gated on tests and a tag/version check."
   },
-
   "trustTier": "community",
-
   "designBrief": "https://github.com/haroldboom/dkg-langchain/blob/master/DESIGN_BRIEF.md",
   "demo": "https://youtu.be/7VEjDqflEpc",
   "promotionPath": "Every conversation turn stored via DKGChatMessageHistory returns a turnUri (UAL). The agent can call promote_to_shared(turn_uri) to SHARE the Knowledge Asset from Working Memory to Shared Working Memory via POST /api/assertion/{name}/promote — promotion is always explicit. From Shared Working Memory, a future PUBLISH call (Round 2 scope) moves the Context Graph to Verified Memory on-chain, preserving the full UAL provenance chain from original turn through to the paranet record. DKGRetriever queries the same WM/SWM graph via SPARQL SELECT, so promoted artifacts are immediately available as RAG context for downstream agents.",
