@@ -46,7 +46,12 @@
     "networkEgress": [],
     "writeAuthority": [
       "POST /api/memory/turn",
-      "POST /api/assertion/{name}/promote"
+      "POST /api/context-graph/create",
+      "POST /api/knowledge-assets (create named Knowledge Asset)",
+      "POST /api/knowledge-assets/{name}/swm/share-async (SHARE, Curator authority; legacy fallback POST /api/assertion/{name}/promote-async)",
+      "POST /api/assertion/{name}/write (WM quads, legacy route)",
+      "POST /api/shared-memory/write (SWM write, Curator authority)",
+      "POST /api/shared-memory/publish (PUBLISH, Curator authority — exposed on DKGClient only; never invoked by the LangChain components)"
     ],
     "credentialsHandled": [],
     "notes": "Communicates only with the local DKG node (default localhost:9200) — no external network egress. Credentials come from the DKG_TOKEN env var or are passed explicitly to DKGClient; never hardcoded. POST /api/memory/turn stores conversation turns as Knowledge Assets; as of v0.1.9 turns default to private Working Memory (layer=\"wm\") — earlier versions deferred to the node default (swm, gossiped). SHARE promotion is always explicit and agent-initiated (async knowledge-assets share job on current nodes, legacy route fallback); no Verified Memory (PUBLISH) operations are performed. No postinstall scripts. Published to PyPI via pypa/gh-action-pypi-publish with attestations:true under Trusted Publishing (PEP-740 attestation per wheel); the publish workflow is gated on the unit-test suite and a tag/version check. 80/80 unit tests pass; CI runs ruff, mypy, and the suite on Python 3.10-3.13 for every push and PR. Releases are verification-tracked against the DKG v10 node: v0.1.4 raised the langchain-core floor for CVE-2026-44843; v0.1.5-v0.1.8 tracked node rc.17→rc.19 API drift (quad shapes, RFC-49 curator-ack codes mapped to typed errors). v0.1.9 (2026-07-04, verified against node build 10.0.2): session-scoped history retrieval, explicit memoryLayers on every search, knowledge-assets promote surface with legacy fallback, typed connection/status errors that never retain raw responses or bearer tokens, pooled HTTP client. Known 10.0.2 limitation documented in the README: /api/query cannot see wm-layer quads (RFC-29 gate fail-closed); memory/search covers private retrieval."
