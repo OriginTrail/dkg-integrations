@@ -40,7 +40,7 @@
   "install": {
     "kind": "manual",
     "docsUrl": "https://github.com/haroldboom/dkg-langchain#readme",
-    "oneLiner": "pip install langchain-dkg==0.1.8 — then set DKG_API_URL and DKG_TOKEN and import DKGChatMessageHistory, DKGMemory, or DKGRetriever."
+    "oneLiner": "pip install langchain-dkg==0.1.9 — then set DKG_API_URL and DKG_TOKEN and import DKGChatMessageHistory, DKGMemory, or DKGRetriever."
   },
   "security": {
     "networkEgress": [],
