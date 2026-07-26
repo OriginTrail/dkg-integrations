@@ -1,0 +1,66 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "buzz-dkg-integration",
+  "name": "Buzz DKG Integration",
+  "description": "Daemon that joins Buzz (block/buzz) rooms as an external Nostr member, turns pinned or @dkg-mentioned threads into single-root PROV-O Knowledge Assets (WM to finalized full SWM share), gates VM publication behind an authorized approval reaction, and answers in-room questions with evidence exclusively from the room's designated Context Graph.",
+  "category": [
+    "chat",
+    "shared-memory",
+    "ingestion",
+    "provenance",
+    "grounded-qa"
+  ],
+  "maintainer": {
+    "github": "@Zigoljube",
+    "contact": "ziga.drev@gmail.com"
+  },
+  "repo": "https://github.com/Zigoljube/buzz-dkg-integration",
+  "commit": "aa115bd697a7a1d2a0c690c28b9410b5eef04959",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.8",
+  "memoryLayers": [
+    "WM",
+    "SWM",
+    "VM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "Assertion",
+    "KnowledgeAsset",
+    "UAL",
+    "Curator"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "generic-HTTP"
+  ],
+  "install": {
+    "kind": "manual",
+    "docsUrl": "https://github.com/Zigoljube/buzz-dkg-integration/blob/main/README.md",
+    "oneLiner": "Node >=22.5 service run from source: npm install, configure .env (relay, service key, DKG token, channel-to-context-graph bindings), npm start. Ships docker-compose for deployment."
+  },
+  "security": {
+    "networkEgress": [
+      "operator-configured Buzz relay host (WS NIP-42 + NIP-98 HTTP bridge); no other egress besides the local DKG node"
+    ],
+    "writeAuthority": [
+      "POST /api/knowledge-assets",
+      "POST /api/knowledge-assets/{name}/wm/write",
+      "POST /api/knowledge-assets/{name}/wm/finalize",
+      "POST /api/knowledge-assets/{name}/swm/share",
+      "POST /api/knowledge-assets/{name}/vm/publish"
+    ],
+    "credentialsHandled": [
+      "BUZZ_SERVICE_NOSTR_SECRET_KEY (the daemon's own Nostr member identity)"
+    ],
+    "notes": "Touches Curator authority: SHARE on every capture (full-KA atomic swm/share into the bound Context Graph) and PUBLISH only on the vm/publish route, which is mode-gated in code: publishMode is 'disabled' (default) or 'devnet' (refuses unless the node reports the local devnet chain); a mainnet mode is deliberately not implemented in the daemon - the one mainnet publication in the evidence package was a separately operator-approved, spend-capped, single-attempt run with all nine approval invariants (authorized promoter reaction on the daemon's own receipt, digest match, dedup) enforced and transcribed. Round-1 scope justification for the VM write authority: VM is the promotion path, never the default; the daemon's continuous behavior is WM->SWM only. No install scripts anywhere; reads are graph-scoped server-side; the DKG bearer token is env-supplied and never logged."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/Zigoljube/buzz-dkg-integration/blob/main/docs/DESIGN.md",
+  "demo": "https://github.com/Zigoljube/buzz-dkg-integration/blob/main/docs/media/buzz-dkg-live-loop.gif",
+  "promotionPath": "Human-triggered capture (pin or @dkg distill) produces one finalized, fully shared SWM Knowledge Asset per decision thread: a single-root PROV-O cluster whose quads snapshot the complete signed Nostr source events (ids, signatures, authors, thread order) plus a deterministic source-set digest, so every claim stays independently verifiable after Buzz soft-deletes. An authorized promoter's approval reaction on the daemon's in-thread receipt requests promotion of exactly that sealed KA to Verifiable Memory; the evidence package includes one operator-approved mainnet publication (UAL did:dkg:base:8453/0x633e5a7c5e612d9981538f60d824cc03be97e2ab/2201) into an existing curated Context Graph. Downstream, clusters carry schema.org name/description surfaces and stable urn: subject URIs, so context oracles and the node's memory search consume them directly; the daemon's own grounded-answering path (@dkg ask) demonstrates that consumption with scoped SPARQL and citation validation.",
+  "fitNotes": "Chat threads to Shared Memory is an explicitly suggested Round-1 build; this entry generalizes it to Buzz/Nostr with relay-enforced membership, deterministic no-model distillation (tests run without any LLM), receipts that anchor an auditable approval chain, and refusal-first graph-scoped answering."
+}
