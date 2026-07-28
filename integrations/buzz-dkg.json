@@ -6,11 +6,11 @@
   "description": "Joins a Block Buzz channel (Nostr/NIP-29) and turns pinned decision threads into DKG Knowledge Assets across Working, Shared, and Verifiable Memory, with a PROV-O provenance chain back to the signed source events. It also answers in-channel with deterministic, no-model retrieval scoped to that room's Context Graph — claims cited, unsupported questions refused.",
   "category": ["ingestion", "chat", "nostr", "provenance", "grounded-answering"],
   "maintainer": {
-    "github": "@Zigoljube",
-    "name": "Žiga Drev"
+    "github": "@OriginTrail/core-developers",
+    "name": "OriginTrail Core Developers"
   },
   "repo": "https://github.com/OriginTrail/buzz-dkg-integration",
-  "commit": "ae84d7fbcad02422fec2074e710cd79a97e325a5",
+  "commit": "806b4e78c5078ed9af8fd33d937743695c345608",
   "license": "Apache-2.0",
   "requiresDkgNodeVersion": ">=10.0.8",
   "memoryLayers": ["WM", "SWM", "VM"],
