@@ -10,7 +10,7 @@
     "name": "Žiga Drev"
   },
   "repo": "https://github.com/Zigoljube/buzz-dkg-integration",
-  "commit": "9195710c1b15a6a994a8185e80fcc9a57d893117",
+  "commit": "0a5de8bc23449535e1673609a590d63271f01109",
   "license": "Apache-2.0",
   "requiresDkgNodeVersion": ">=10.0.8",
   "memoryLayers": ["WM", "SWM", "VM"],
