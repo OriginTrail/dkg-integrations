@@ -6,7 +6,7 @@ Each integration listed here is a **contributor-owned project** that talks to a 
 
 Integrations listed here are:
 
-- **Discoverable** via `dkg integration search` in the CLI and the Integrations tab in the node dashboard.
+- **Discoverable** via `dkg integration list` / `dkg integration search` in the CLI and the Integrations tab in the node dashboard.
 - **Installable** via `dkg integration install <slug>`, which executes the declared install recipe and wires the integration to the local node with your consent.
 - **Declared** — every entry spells out its license, its network egress, its DKG write authority, and its third-party credential needs. No hidden behavior.
 
@@ -18,9 +18,9 @@ This repository does **not** contain integration code. Integration code lives in
 
 ```bash
 # Browse the registry
-dkg integration search                    # featured + verified
+dkg integration list                      # featured + verified
 dkg integration search shared-memory      # filter by keyword
-dkg integration search --tier community   # include community-tier entries
+dkg integration list --tier community     # include community-tier entries
 dkg integration info <slug>               # full details for one integration
 
 # Install
@@ -29,7 +29,7 @@ dkg integration install <slug> --allow-community   # required for community tier
 dkg integration install <slug> --dry-run
 
 # What's installed here
-dkg integration list
+dkg integration installed
 ```
 
 `install` automates the `cli`, `mcp` and `service` (npm-global) kinds. A `manual`
@@ -37,7 +37,7 @@ entry is not automated by design — `install` prints its setup docs and exits 0
 `agent-plugin` and `service` (docker/binary) are not yet automated; `install`
 says so explicitly rather than pretending.
 
-`list` detects what is actually present: globally-installed npm packages for
+`installed` detects what is actually present: globally-installed npm packages for
 `cli` and `service`, and MCP client configs for `mcp`. Kinds the CLI does not
 install (`manual`, `agent-plugin`) are reported as `unknown` rather than
 "not installed", because it has no way to know.
@@ -70,9 +70,9 @@ Every entry has a `trustTier` that determines how prominently it surfaces:
 
 | Tier         | Who gets it                                          | Surfacing                                     |
 | ------------ | ---------------------------------------------------- | --------------------------------------------- |
-| `featured`   | OriginTrail-maintained or committee-promoted         | Default in `dkg integration search`, docs     |
-| `verified`   | Externally maintained, passed full security review   | Default in search                             |
-| `community`  | Any accepted entry                                   | Shown with `--tier community`                 |
+| `featured`   | OriginTrail-maintained or committee-promoted         | Default in `dkg integration list` / `search`, docs |
+| `verified`   | Externally maintained, passed full security review   | Default in list / search                       |
+| `community`  | Any accepted entry                                   | Shown with `--tier community`                  |
 
 Contributors submit as `community`; the review committee may upgrade the tier.
 
