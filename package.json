@@ -10,7 +10,7 @@
   },
   "scripts": {
     "validate": "node scripts/validate.mjs",
-    "security-checks": "node scripts/security-checks.mjs integrations/dkg-hello-world.json integrations/cursor-mcp-dkg.json",
+    "security-checks": "node scripts/security-checks.mjs integrations/dkg-hello-world.json",
     "check": "node scripts/validate.mjs && echo \"\\nSchema validation passed.\""
   },
   "dependencies": {

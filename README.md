@@ -18,19 +18,32 @@ This repository does **not** contain integration code. Integration code lives in
 
 ```bash
 # Browse the registry
-dkg integration search                # list featured + verified
-dkg integration search shared-memory  # filter by keyword
-dkg integration info <slug>           # full details for one integration
+dkg integration search                    # featured + verified
+dkg integration search shared-memory      # filter by keyword
+dkg integration search --tier community   # include community-tier entries
+dkg integration info <slug>               # full details for one integration
 
 # Install
 dkg integration install <slug>
-dkg integration install <slug> --for cursor   # scope an MCP install to one client
+dkg integration install <slug> --allow-community   # required for community tier
+dkg integration install <slug> --dry-run
 
-# Manage
-dkg integration list                  # what's installed locally
-dkg integration upgrade <slug>
-dkg integration uninstall <slug>
+# What's installed here
+dkg integration list
 ```
+
+`install` automates the `cli`, `mcp` and `service` (npm-global) kinds. A `manual`
+entry is not automated by design — `install` prints its setup docs and exits 0.
+`agent-plugin` and `service` (docker/binary) are not yet automated; `install`
+says so explicitly rather than pretending.
+
+`list` detects what is actually present: globally-installed npm packages for
+`cli` and `service`, and MCP client configs for `mcp`. Kinds the CLI does not
+install (`manual`, `agent-plugin`) are reported as `unknown` rather than
+"not installed", because it has no way to know.
+
+`upgrade` and `uninstall` do not exist yet — they need to *undo* an install,
+including editing MCP client configs the CLI never wrote.
 
 See the DKG v10 node documentation for details on `dkg integration` subcommands.
 
@@ -47,7 +60,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the submission walkthrough. The short
 3. CI validates your entry against [schema/integration.schema.json](schema/integration.schema.json) and runs security checks against your published package.
 4. The review committee evaluates fit, quality, and security. Awards are disbursed on registry acceptance (not on integration code merging anywhere).
 
-You do **not** need to build an installer — the `dkg integration install` command handles the supported install kinds automatically (`mcp`, `service`, `cli`, `agent-plugin`, `manual`). You just describe how your integration wants to be installed in the registry entry.
+You do **not** need to build an installer — you describe how your integration wants to be installed in the registry entry and `dkg integration install` does the rest for `cli`, `mcp` and `service` (npm-global). `manual` is not automated by design: the installer links out to your docs, which is why `docsUrl` is required for that kind. `agent-plugin` and `service` (docker/binary) are not automated yet.
 
 ---
 
@@ -59,7 +72,7 @@ Every entry has a `trustTier` that determines how prominently it surfaces:
 | ------------ | ---------------------------------------------------- | --------------------------------------------- |
 | `featured`   | OriginTrail-maintained or committee-promoted         | Default in `dkg integration search`, docs     |
 | `verified`   | Externally maintained, passed full security review   | Default in search                             |
-| `community`  | Any accepted entry                                   | Shown with `--include-community`              |
+| `community`  | Any accepted entry                                   | Shown with `--tier community`                 |
 
 Contributors submit as `community`; the review committee may upgrade the tier.
 
