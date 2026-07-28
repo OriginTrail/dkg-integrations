@@ -10,7 +10,7 @@
     "name": "Žiga Drev"
   },
   "repo": "https://github.com/Zigoljube/buzz-dkg-integration",
-  "commit": "3cafe11e1f7feb723b91f76b49482c3e2cc9d21b",
+  "commit": "9195710c1b15a6a994a8185e80fcc9a57d893117",
   "license": "Apache-2.0",
   "requiresDkgNodeVersion": ">=10.0.8",
   "memoryLayers": ["WM", "SWM", "VM"],
@@ -20,7 +20,7 @@
   "install": {
     "kind": "manual",
     "docsUrl": "https://github.com/Zigoljube/buzz-dkg-integration/blob/main/README.md",
-    "oneLiner": "Run the standalone daemon (Node >=22.9) against a Buzz relay and a DKG v10 edge node, then bind a channel to a Context Graph in bindings.json. Setup and env are in README.md ('Deploy against an existing relay + node'); design and trust boundaries in docs/DESIGN.md. Verifiable Memory publishing is disabled by default and must be explicitly enabled by the operator."
+    "oneLiner": "Run the standalone daemon (Node >=22.13) against a Buzz relay and a DKG v10 edge node, then bind a channel to a Context Graph in bindings.json. Setup and env are in README.md ('Deploy against an existing relay + node'); design and trust boundaries in docs/DESIGN.md. Verifiable Memory publishing is disabled by default and must be explicitly enabled by the operator."
   },
   "security": {
     "networkEgress": [
