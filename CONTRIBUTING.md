@@ -47,6 +47,34 @@ The `security` block in your entry is not marketing copy. It is a **contract** b
 - `security.credentialsHandled` — third-party credentials the installer will prompt the user for. Do not list the DKG auth token here; the installer handles it.
 - `security.notes` — freeform prose covering anything the structured fields don't capture. If your package has any `postinstall` behavior, explain it here; default posture is "no install scripts."
 
+### Choosing `publicInterfacesUsed`
+
+This is the field reviewers audit for scope compliance, and it is the one most often
+mis-declared. It describes **how your code reaches the node** — not what you expose
+to your own users.
+
+- **`http-api`** — your code calls `/api/...` on the node. This is the right answer
+  for almost everything.
+- **`cli`** — your code shells out to the `dkg` binary. Choose this only if you
+  genuinely invoke it (e.g. to reuse a setup flow that isn't a single HTTP call);
+  it means `dkg` must be on the operator's `PATH`.
+- **`mcp`** — your code is itself an **MCP client** of the DKG's MCP server.
+  Worth it only to reuse a composite tool the HTTP API doesn't expose in one call
+  (`dkg_knowledge_asset_import_file`, for example). Never chain through the DKG MCP
+  server just to reach `/api/...` — call it directly. Declaring `mcp` couples you to
+  `@origintrail-official/dkg-mcp`, whose tool schema tracks node releases, and adds
+  a process hop.
+
+**If your integration IS an MCP server that calls `/api/...`, declare `http-api`
+alone.** That you are an MCP server is already recorded by `install.kind: mcp`;
+`publicInterfacesUsed` answers a different question. Declaring `mcp` here sends
+reviewers looking for an MCP client that doesn't exist.
+
+If you build an MCP server, it is also worth saying in `fitNotes` whether it is
+self-contained or expects the DKG's own MCP server installed alongside it — users
+deciding what to install have no other way to tell, and installing both means the
+agent sees two overlapping ways to do the same thing.
+
 ## 4. Pin your version
 
 Your entry carries:
