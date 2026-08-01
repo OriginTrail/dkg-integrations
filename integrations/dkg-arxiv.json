@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "dkg-arxiv",
+  "name": "DKG arXiv",
+  "description": "Source integration that ingests arXiv papers into a Project's Working Memory as Knowledge Assets, with full provenance, status tags, and preserved upstream licence. Lets a DKG agent answer from current peer-reviewed knowledge instead of training-vintage guesses.",
+  "category": ["ingestion", "research", "arxiv", "working-memory"],
+  "maintainer": {
+    "github": "@TomazOT",
+    "name": "Tomaz"
+  },
+  "repo": "https://github.com/TomazOT/arxiv-dkg-integration",
+  "commit": "f3db3beb755c590a0ad63568de578fff72e990e4",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.0-rc.1",
+  "memoryLayers": ["WM"],
+  "v10PrimitivesUsed": ["ContextGraph", "Assertion", "KnowledgeCollection", "KnowledgeAsset", "Entity"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["generic-CLI", "generic-MCP", "Cursor", "Claude Code", "Claude Desktop"],
+  "install": {
+    "kind": "cli",
+    "package": "dkg-arxiv",
+    "version": "0.1.0",
+    "binary": "dkg-arxiv",
+    "envRequired": ["DKG_API_URL", "DKG_AUTH_TOKEN"],
+    "usageHint": "Ingest arXiv papers into a Project's WM:\n  dkg-arxiv ingest \"retrieval augmented generation\" --project rag-research --top 20\n\nFor a browser panel: dkg-arxiv ui serve\nFor an MCP server: dkg-arxiv mcp serve\n\nNeeds OPENAI_API_KEY (or DKG_ARXIV_LLM_API_KEY) for real-LLM extraction; otherwise pass DKG_ARXIV_ALLOW_STUB=1."
+  },
+  "security": {
+    "networkEgress": ["export.arxiv.org", "arxiv.org", "api.openai.com"],
+    "writeAuthority": [
+      "POST /api/assertion/create",
+      "POST /api/assertion/{name}/write"
+    ],
+    "credentialsHandled": ["OPENAI_API_KEY"],
+    "notes": "Talks to arXiv's public API (export.arxiv.org for metadata, arxiv.org for PDF download in fulltext mode) and to one LLM endpoint of the user's choice. The LLM endpoint defaults to api.openai.com but is configurable to any OpenAI-compatible API via DKG_ARXIV_LLM_BASE_URL (Together, Groq, local Ollama, etc); only one endpoint is in flight per ingest. The integration writes exclusively to Working Memory via the assertion API. It never invokes Curator-authority operations: SHARE is performed by the user's existing agent through its own adapter, not by this integration; PUBLISH to Verified Memory is out of scope for Round 1. No preinstall, install, or postinstall scripts in the published package. Upstream licence on every paper is recorded as a triple to support safe future PUBLISH decisions. OPENAI_API_KEY (or its alias DKG_ARXIV_LLM_API_KEY) is the only third-party credential; the DKG auth token at ~/.dkg/auth.token is auto-filled by the installer."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/TomazOT/arxiv-dkg-integration/blob/f3db3beb755c590a0ad63568de578fff72e990e4/docs/DESIGN.md",
+  "demo": "https://github.com/TomazOT/arxiv-dkg-integration#first-run-5-minutes-via-ui",
+  "promotionPath": "Knowledge Assets land in Working Memory tagged with extraction confidence (extracted-high-confidence / extracted-needs-review). The user's agent moves matured assets to Shared Memory through SHARE for team visibility, a Curator-authority operation performed by the agent through its own adapter, not by this integration. Verified Memory promotion is out of scope for Round 1; the entry is shaped so a Round 2 PUBLISH integration mints a UAL per publisher and links it back to the integration's stable ual:dkg:arxiv/{arxivId} IRI via owl:sameAs. Upstream licence is preserved as a triple on every Knowledge Asset so the Round 2 PUBLISH step can refuse redistribution-restricted papers without re-fetching.",
+  "fitNotes": "Smallest useful step toward populating an agent-native knowledge substrate with current peer-reviewed knowledge. Source-side: pulls from arXiv, writes to Working Memory only. The user's existing agent reads from WM through its own adapter, so the integration ships no agent-side wiring."
+}
