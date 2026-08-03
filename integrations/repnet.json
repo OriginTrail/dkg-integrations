@@ -1,0 +1,94 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "repnet",
+  "name": "RepNet Agent Trust Layer",
+  "description": "RepNet gives AI agents a DKG-backed trust layer for choosing counterparties. Jobs, applications, payment paths, delivery context, LLM-assisted delivery reports, feedback rights, and final reputation evidence become structured memory that future agents can query before hiring, paying, delegating, collaborating, or trusting.",
+  "category": [
+    "mcp",
+    "reputation",
+    "agent-trust",
+    "working-memory",
+    "shared-memory",
+    "escrow"
+  ],
+  "maintainer": {
+    "github": "@dreddster",
+    "name": "Milian Istatkov",
+    "contact": "istatkov@tuta.com"
+  },
+  "repo": "https://github.com/dreddster/RepNet",
+  "commit": "692faf247d062ec91c24d25d37867454a918a216",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.0-rc.4",
+  "memoryLayers": [
+    "WM",
+    "SWM",
+    "VM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "Assertion",
+    "KnowledgeAsset",
+    "Curator",
+    "Entity",
+    "UAL"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "Hermes",
+    "Claude Code",
+    "Claude Desktop",
+    "Cursor",
+    "ElizaOS",
+    "generic-MCP",
+    "generic-CLI"
+  ],
+  "install": {
+    "kind": "mcp",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@repnet/mcp-server@0.1.4"
+    ],
+    "envRequired": [
+      "REPNET_PRIVATE_KEY",
+      "DKG_API_URL",
+      "DKG_AUTH_TOKEN",
+      "DKG_CONTEXT_GRAPH_ID"
+    ],
+    "supportedClients": [
+      "cursor",
+      "claude-code",
+      "claude-desktop",
+      "dkg-node"
+    ]
+  },
+  "security": {
+    "networkEgress": [
+      "configured Base/Base Sepolia RPC endpoint",
+      "configured DKG node HTTP API",
+      "configured RepNet gateway/publisher API when using gateway-backed job-board, delivery, or feedback actions"
+    ],
+    "writeAuthority": [
+      "POST /api/assertion/create with promote=true for Shared Memory promotion fallback",
+      "POST /api/shared-memory/publish",
+      "POST /api/publish-direct"
+    ],
+    "credentialsHandled": [
+      "REPNET_PRIVATE_KEY",
+      "REPNET_RPC_URL",
+      "DKG_API_URL",
+      "DKG_AUTH_TOKEN",
+      "DKG_CONTEXT_GRAPH_ID"
+    ],
+    "notes": "RepNet consumes the DKG node through its HTTP API and does not import internal DKG packages or patch node source. Private job specs, proposals, delivery payloads, and review context stay in RepNet gateway custody or local node state. Public OpenJob and JobApplication summaries are shaped for Context Graph Shared Memory / discovery without exposing private specs or proposals. Completed outcomes become public DKG reputation evidence / Knowledge Assets for future counterparty evaluation. Context Graph / Curator authority remains with the configured node and graph policy; clients submit signed intent or feedback and do not forge public reputation assets directly. The published MCP package has no preinstall, install, or postinstall scripts."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/dreddster/RepNet/blob/main/docs/DKG-INTEGRATION-DESIGN-BRIEF.md",
+  "demo": "https://raw.githubusercontent.com/dreddster/RepNet/main/docs/assets/demos/repnet-job-board-lifecycle.mp4",
+  "promotionPath": "Private job specs, proposals, delivery payloads, and review context start as RepNet Working Memory. Public OpenJob and JobApplication summaries are shaped for Context Graph Shared Memory / discovery so DKG peers can discover open work and applications without exposing private data. Completed outcomes, feedback rights, receipts, and final reputation events become public DKG reputation evidence / Knowledge Assets with stable identifiers, proof references, hashes, timestamps, parties, payment mode, and outcome semantics so future agents and context-oracle pipelines can evaluate counterparties with provenance.",
+  "fitNotes": "RepNet supports two payment paths: review-hold, where the Contractor funds the job in advance and an LLM opinion report helps decide release or more-work requests; and upfront, where the Contractor pays the Worker immediately through RepNet, creating a paid job receipt and feedback path. Public job-board and final-event data create aggregate agent-work intelligence: job categories, work types, deliverables, tools, payment amounts, delivery-quality assessment outcomes, cancellation patterns, feedback rights, and role-aware feedback without exposing private specifications or delivery payloads."
+}
