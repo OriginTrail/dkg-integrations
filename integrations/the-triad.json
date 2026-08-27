@@ -1,0 +1,41 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "the-triad",
+  "name": "The Triad — Multi-Agent Research Pipeline",
+  "description": "Three autonomous agents (Cleo/Cron, Otto/Hermes, Vrilnius/OpenClaw) collaborate through DKG v10 Working + Shared Memory to build a cross-referenced knowledge graph. Zero gas MVP; each agent writes to a shared Context Graph with full provenance chaining (researchedFrom → basedOn).",
+  "category": ["ingestion", "working-memory", "shared-memory", "multi-agent"],
+  "maintainer": {
+    "github": "@CG1up",
+    "name": "CG1up (Tcharly G)"
+  },
+  "repo": "https://github.com/CG1up/triad-dkg-bounty",
+  "commit": "ddbc4849aed81207e2e1eb951e1a9ce22a745ead",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.0-rc.9",
+  "memoryLayers": ["WM", "SWM"],
+  "v10PrimitivesUsed": ["ContextGraph", "Assertion", "KnowledgeAsset"],
+  "publicInterfacesUsed": ["http-api", "cli"],
+  "targetAgents": ["generic-CLI", "generic-HTTP", "hermes-agent", "openclaw-gateway"],
+  "install": {
+    "kind": "cli",
+    "package": "CG1up/triad-dkg-bounty",
+    "version": "1.0.0",
+    "binary": "query-triad.py",
+    "envRequired": ["DKG_AUTH_TOKEN"],
+    "usageHint": "Clone the repo, configure DKG auth, and run:\\n  git clone https://github.com/CG1up/triad-dkg-bounty\\n  cd triad-dkg-bounty\\n  cp scripts/.dkg-config.json.example scripts/.dkg-config.json\\n  # Edit .dkg-config.json with your DKG node's auth token\\n  python3 scripts/query-triad.py --summary\\n\\nEach agent script is standalone:\\n  python3 scripts/research-to-dkg.py --title \\\"...\\\" --source-url \\\"...\\\" --findings \\\"...\\\" --verdict adopt\\n  python3 scripts/artifact-to-dkg.py --type code --project \\\"...\\\" --summary \\\"...\\\" --path \\\"...\\\"\\n  python3 scripts/reading-queue-worker.py  # Cleo cron worker\\n  ./demo.sh  # Full end-to-end demo"
+  },
+  "security": {
+    "networkEgress": ["ollama:11434 (local, Gemma 4 26B for Cleo classification)"],
+    "writeAuthority": [
+      "POST /api/assertion/{name}/write (via dkg workspace write)"
+    ],
+    "credentialsHandled": ["DKG_AUTH_TOKEN (local config file)"],
+    "notes": "All agents share a single local Edge Node. Auth token stored in .dkg-config.json (gitignored). Cleo uses local Ollama for URL classification — no external API egress. Otto and Vrilnius use user's existing LLM APIs (DeepSeek V4, GPT-4o). All DKG writes via subprocess.run() with explicit args — no shell injection vectors. Never calls PUBLISH or SHARE — Working + Shared Memory only. No npm publish required (standalone Python scripts)."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/CG1up/triad-dkg-bounty/blob/main/design-brief.md",
+  "demo": "https://github.com/CG1up/triad-dkg-bounty#quick-start",
+  "promotionPath": "All three agents write to Working Memory via 'dkg workspace write' (free, local SQLite). The data is immediately queryable via SPARQL across Shared Memory ('dkg query --include-shared-memory'). The promotion path to Verified Memory is explicit but deferred to Round 2: once the context graph is registered on-chain, calling 'dkg workspace publish' promotes staged assertions to Verified Memory with on-chain anchoring. The integration is designed so that no code changes are needed — the same N-Quads triples carry through all three layers. Round 2 adds: per-agent DIDs with signing keys, multi-node deployment (one Edge Node per agent), auto-promotion cron, and a public SPARQL endpoint for context oracle consumption.",
+  "fitNotes": "The Triad directly advances the autonomous research pipeline direction described in the ERC-8004 specification. By connecting a reading-queue worker (Cleo) → research agent (Otto) → build agent (Vrilnius) through DKG's content-addressed memory, it demonstrates how agent-native knowledge graphs can eliminate the 'context silo' problem where each agent's output is invisible to others. The provenance chain (researchedFrom → basedOn) creates a verifiable lineage from raw URL ingestion through to built artifact — this is the exact pattern needed for LLM-Wiki style autonomous knowledge curation at scale."
+}
