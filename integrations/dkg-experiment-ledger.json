@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "0.1.0",
+  "slug": "dkg-experiment-ledger",
+  "name": "DKG Experiment Ledger",
+  "description": "Records explicit notebook and autoresearch experiment results in project-scoped Working Memory, retrieves compatible runs, and supports Curator-authorized sharing with provenance.",
+  "category": [
+    "autoresearch",
+    "working-memory",
+    "ingestion"
+  ],
+  "maintainer": {
+    "github": "@btusbefw"
+  },
+  "repo": "https://github.com/btusbefw/dkg-experiment-ledger",
+  "commit": "49d0e394d18a630e096316ab9635e8b757dc81f0",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.16 <11",
+  "memoryLayers": [
+    "WM",
+    "SWM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "Assertion",
+    "KnowledgeAsset",
+    "Entity",
+    "Curator"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "AutoResearch",
+    "generic-CLI",
+    "generic-HTTP"
+  ],
+  "install": {
+    "kind": "cli",
+    "package": "@btusbefw/dkg-experiment-ledger",
+    "version": "0.1.1",
+    "binary": "dkg-experiments",
+    "envRequired": [
+      "DKG_API_URL",
+      "DKG_AUTH_TOKEN",
+      "DKG_CONTEXT_GRAPH"
+    ],
+    "usageHint": "Use a local registered agent token and exact Project ID; run dkg-experiments --help. Records remain private until explicit share."
+  },
+  "security": {
+    "networkEgress": [],
+    "writeAuthority": [
+      "POST /api/knowledge-assets",
+      "POST /api/knowledge-assets/{name}/wm/write",
+      "POST /api/knowledge-assets/{name}/swm/share"
+    ],
+    "credentialsHandled": [],
+    "notes": "Default egress is the local DKG node only. Optional remote mode requires an explicitly configured HTTPS DKG host and DKG_ALLOW_REMOTE=1; declare that host for preconfigured remote deployments. No third-party service calls or install scripts. SHARE requires exact Project confirmation and node-enforced Curator authorization. No PUBLISH, wallet spending, or dynamic code loading. Records are caller-supplied; no general secret-scanning guarantee."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/btusbefw/dkg-experiment-ledger/blob/49d0e394d18a630e096316ab9635e8b757dc81f0/DESIGN.md",
+  "demo": "https://github.com/btusbefw/dkg-experiment-ledger/blob/49d0e394d18a630e096316ab9635e8b757dc81f0/demo/walkthrough.cast",
+  "promotionPath": "Records begin as private self-attested Working Memory assets with source/data fingerprints. The Curator authorizes SHARE and DKG seals the content. Official agent conversations later authorize PUBLISH and return the actual UAL, which downstream oracles can pair with the record digest and provenance; no UAL is invented or publication automated.",
+  "fitNotes": "Targets the bounty\u2019s autoresearch and Jupyter/notebook surfaces. Includes a real regression experiment, dependency-free CLI/library, Python kernel bridge, scoped retrieval, compatible-run comparison, and real-node regression evidence. Maintainer @btusbefw commits to six months of maintenance after acceptance."
+}
