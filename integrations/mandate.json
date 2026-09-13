@@ -1,0 +1,55 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "mandate",
+  "name": "Mandate",
+  "description": "Consent for generative media on DKG v10. A depicted person's agent publishes a likeness grant; a rendering agent resolves it before invoking an identity-bearing model and refuses without it; revocations propagate from the graph; anyone can verify a delivered file from its bytes.",
+  "category": ["consent", "provenance", "media", "rights", "revocation"],
+  "maintainer": {
+    "github": "@OoJae"
+  },
+  "repo": "https://github.com/OoJae/mandate",
+  "commit": "6981c2cb052ce49e04d955f36431b7a4b9486626",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.16",
+  "memoryLayers": ["WM", "SWM", "VM"],
+  "v10PrimitivesUsed": ["ContextGraph", "KnowledgeAsset", "Assertion", "UAL"],
+  "publicInterfacesUsed": ["cli", "http-api"],
+  "targetAgents": ["generic-CLI", "generic-HTTP"],
+
+  "install": {
+    "kind": "cli",
+    "package": "mandate-consent",
+    "version": "0.1.0",
+    "binary": "mandate",
+    "envRequired": ["MANDATE_GRANTS_CG", "MANDATE_DERIVATIONS_CG"],
+    "usageHint": "Run one DKG node per party. Set MANDATE_GRANTS_CG to the grantor's registered graph and MANDATE_DERIVATIONS_CG to the producer's (see .env.example), then: mandate status, mandate grant, mandate render, mandate revoke, mandate verify --url <file>."
+  },
+
+  "security": {
+    "networkEgress": [
+      "agent.livepeer.org — Livepeer Agent MCP; only for render --execute and consent capture",
+      "operator-supplied media URLs — fetched to SHA-256 the bytes when verifying or recording a derivation"
+    ],
+    "writeAuthority": [
+      "POST /api/knowledge-assets (create a draft: grant, revocation, or derivation)",
+      "POST /api/knowledge-assets/{name}/wm/write (Working Memory)",
+      "POST /api/knowledge-assets/{name}/wm/finalize (EIP-712 author seal)",
+      "POST /api/knowledge-assets/{name}/swm/share (Curator SHARE; retried, because create-with-share is not atomic)",
+      "POST /api/knowledge-assets/{name}/vm/publish (Curator PUBLISH to Verifiable Memory; synchronous route only, never publish-async)",
+      "POST /api/context-graph/create (one-time operator setup via the dkg CLI; not called by the package)",
+      "POST /api/context-graph/register (one-time operator setup via the dkg CLI; on-chain registration)",
+      "POST /api/context-graph/subscribe (one-time operator setup via the dkg CLI)"
+    ],
+    "credentialsHandled": [
+      "LIVEPEER_AGENT_KEY (optional; the keyless demo tier works without it)"
+    ],
+    "notes": "All DKG access is through the public dkg CLI, resolved via the bin entry @origintrail-official/dkg declares, and the node HTTP API; no internal packages are imported and nothing is written to SPARQL directly. Each node's API token is read from its own DKG_HOME and sent only to that local node; wallet keystores are never read. Curator PUBLISH is used deliberately: measured on two v10.0.16 testnet nodes, Shared Working Memory for these context graphs did not reach the other party (the grantor node logged RFC-64 authority bootstrap incomplete, ERC721NonexistentToken), so a revocation left in SWM was never seen by the producer, which kept permitting. Once anchored, the producer's own node refused within 4 to 49 seconds across three runs. Each party publishes only to a context graph it registered itself. The package has no install scripts, its core has zero runtime dependencies, and npm audit --omit=dev is clean. 0.1.0 was published from a local machine and carries no provenance attestation."
+  },
+
+  "trustTier": "community",
+
+  "designBrief": "https://github.com/OoJae/mandate/blob/v0.1.0/DESIGN.md",
+  "demo": "https://github.com/OoJae/mandate/blob/v0.1.0/README.md#demo",
+  "promotionPath": "Drafts are written and finalized in Working Memory on the authoring node; consent media, reference images, names and prompts never leave it. The finalized clause data is shared to the owner's context graph and then published to Verifiable Memory, because cross-party consent only works once anchored: grants and revocations in the grantor's graph, derivation edges in the producer's. The resulting UALs let any subscribed node or oracle resolve whether a render was authorised, and whether that authorisation still stands, without trusting either party."
+}
