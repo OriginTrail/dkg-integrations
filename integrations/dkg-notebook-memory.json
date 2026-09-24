@@ -1,0 +1,36 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "dkg-notebook-memory",
+  "name": "DKG Notebook Memory",
+  "description": "Export explicitly selected Jupyter notebook findings to private Working Memory. Stable cell provenance, content-addressed revisions, verified readback and repeat-safe writes let research agents retain hypotheses separately from observations without executing notebook code.",
+  "category": ["research", "notebooks", "working-memory"],
+  "maintainer": {"github": "@Codesensitive"},
+  "repo": "https://github.com/Codesensitive/dkg-notebook-memory",
+  "commit": "26675fdc6537efea1c70f18891260b98c651f8e2",
+  "license": "MIT",
+  "requiresDkgNodeVersion": ">=10.0.18",
+  "memoryLayers": ["WM"],
+  "v10PrimitivesUsed": ["ContextGraph", "Assertion", "Entity", "Integration"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["generic-CLI", "generic-HTTP"],
+  "install": {
+    "kind": "cli",
+    "package": "dkg-notebook-memory",
+    "version": "0.1.2",
+    "binary": "dkg-notebook-memory",
+    "envRequired": ["DKG_AUTH_TOKEN", "DKG_API_URL"],
+    "usageHint": "Mark notebook cells metadata.dkg.export=true. Preview: dkg-notebook-memory plan research.ipynb --project EXISTING_GRAPH --source https://example.org/research --agent researcher. Replace plan with push to write; recall ASSET --project EXISTING_GRAPH to retrieve."
+  },
+  "security": {
+    "networkEgress": [],
+    "writeAuthority": ["POST /api/knowledge-assets", "POST /api/knowledge-assets/{name}/wm/write"],
+    "credentialsHandled": [],
+    "notes": "HTTP literal loopback origins only; redirects rejected. Source URLs are provenance labels and are never fetched. No runtime dependencies or installation scripts. Explicitly selected source text only: no notebook execution, outputs or attachments. Selected text still requires operator review for secrets. Requires an existing Context Graph. No SHARE, PUBLISH or chain transactions. Concurrent same-asset writes must be serialized."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/Codesensitive/dkg-notebook-memory/blob/26675fdc6537efea1c70f18891260b98c651f8e2/docs/DESIGN.md",
+  "demo": "https://codesensitive.github.io/dkg-notebook-memory/",
+  "promotionPath": "Selected findings start as private WM assertions. An authorized Curator may later finalize and SHARE them through the standard lifecycle; PUBLISH is a separate explicitly authorized operation. The integration fabricates no UAL: downstream promotion must retain the actual published UAL and provenance, and context oracles must independently assess source reliability and verification level.",
+  "fitNotes": "Research agents can resume from selected hypotheses, observations and conclusions with stable cell identity and source provenance. Edits create new revisions; reordered cells and changed execution outputs do not. No native agent-framework plugin, external adoption or on-chain validation is claimed."
+}
