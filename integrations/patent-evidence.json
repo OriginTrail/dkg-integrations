@@ -1,0 +1,88 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "patent-evidence",
+  "name": "Patent Evidence",
+  "description": "A local research workspace and MCP server that preserves patent-source quotations, agent findings and reasoned challenges in DKG Working and Shared Working Memory.",
+  "category": [
+    "research",
+    "working-memory",
+    "patents"
+  ],
+  "maintainer": {
+    "github": "@alexanderipc"
+  },
+  "repo": "https://github.com/alexanderipc/patent-evidence-dkg",
+  "commit": "fb14eb35e347d2a45c9975e46ae21f4e3ae4e2bc",
+  "license": "AGPL-3.0-only",
+  "requiresDkgNodeVersion": ">=10.0.18 <10.1.0",
+  "memoryLayers": [
+    "WM",
+    "SWM"
+  ],
+  "v10PrimitivesUsed": [
+    "KnowledgeAsset",
+    "ContextGraph",
+    "Curator",
+    "Entity"
+  ],
+  "publicInterfacesUsed": [
+    "http-api",
+    "cli"
+  ],
+  "targetAgents": [
+    "generic-MCP",
+    "generic-CLI"
+  ],
+  "install": {
+    "kind": "mcp",
+    "command": "uvx",
+    "args": [
+      "--from",
+      "patent-evidence-dkg==0.2.0",
+      "patent-evidence",
+      "mcp"
+    ],
+    "envRequired": [
+      "DKG_API_URL",
+      "DKG_AUTH_TOKEN",
+      "PATENT_EVIDENCE_STATE",
+      "PATENT_EVIDENCE_PROJECT"
+    ],
+    "supportedClients": [
+      "cursor",
+      "claude-code",
+      "claude-desktop"
+    ]
+  },
+  "security": {
+    "networkEgress": [
+      "chatgpt.com",
+      "auth.openai.com",
+      "api.openai.com",
+      "patents.google.com",
+      "pypi.org",
+      "files.pythonhosted.org",
+      "registry.npmjs.org",
+      "github.com",
+      "release-assets.githubusercontent.com"
+    ],
+    "writeAuthority": [
+      "dkg start / dkg stop (local setup and testing)",
+      "POST /api/agent/register (bootstrap only)",
+      "POST /api/context-graph/create (register=false)",
+      "POST /api/context-graph/subscribe (resume existing private subscription)",
+      "POST /api/knowledge-assets",
+      "POST /api/knowledge-assets/{name}/wm/write (allowlisted)",
+      "POST /api/knowledge-assets/{name}/wm/finalize",
+      "POST /api/knowledge-assets/{name}/swm/share (Curator-authorized SHARE)"
+    ],
+    "credentialsHandled": [],
+    "notes": "Runtime uses a local agent-scoped DKG token. Bootstrap reads the local admin token once to register an unfunded managed identity; it discards the returned private key. Live research invokes an already signed-in Codex CLI, without reading its credentials. Selected excerpts and prior findings go to the configured OpenAI service. Publication lookup is optional and reveals requested patent IDs. Installation hosts are declared as well as runtime hosts. No application preinstall/postinstall scripts, VM publishing, funds or node-source patches. The recorded demo has no remote peers and uses a mock chain; it does not prove distributed replication. See SECURITY.md for the pinned upstream DKG runtime advisory exceptions and listener limitations."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/alexanderipc/patent-evidence-dkg/blob/fb14eb35e347d2a45c9975e46ae21f4e3ae4e2bc/DESIGN.md",
+  "demo": "https://github.com/alexanderipc/patent-evidence-dkg/releases/download/v0.2.0/Patent-Evidence-Walkthrough.mp4",
+  "promotionPath": "Implemented local preparation produces a signed, selected-evidence candidate with source fingerprints, exact quotations, WM/SWM lineage, attributed historical-date assertions and unresolved review items. An offline oracle consumer verifies it before returning cited answers. Proceedings never authorize disclosure automatically. A future separately authorized Curator PUBLISH would add the actual VM UAL, anchor date and trust tier; current values are null. No VM write is implemented.",
+  "fitNotes": "A real Codex MCP agent with a separate registered identity recovered 16 findings into a source-only workspace, checked quotations and shared a new finding. Three subsequent fresh-workspace trials each recovered 17 findings and verified 61 citations through SWM. A source revision flags direct and explicit transitive dependencies; another real agent saved reassessment reasons. The notebook selects unanswered questions for bounded follow-up runs. Standard MCP configuration compatibility is declared for registry clients; execution was tested with Codex, not every listed client."
+}
