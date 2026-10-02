@@ -1,0 +1,78 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "dkg-review-ledger",
+  "name": "DKG Review Ledger",
+  "description": "Commit-aware GitHub pull-request review and CI evidence for engineering agents. Immutable source snapshots are captured in DKG v10 Working Memory and explicitly shared through the node's Curator authority.",
+  "category": [
+    "engineering",
+    "agent-memory",
+    "github"
+  ],
+  "maintainer": {
+    "github": "@shadowharness",
+    "name": "ShadowHarness project",
+    "contact": "contact@shadowharness.com"
+  },
+  "repo": "https://github.com/shadowharness/dkg-review-ledger",
+  "commit": "6010429329fe819ca13f3126422dd3a69628f1f1",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": "10.0.20",
+  "memoryLayers": [
+    "WM",
+    "SWM"
+  ],
+  "v10PrimitivesUsed": [
+    "KnowledgeAsset",
+    "ContextGraph",
+    "Curator",
+    "Entity"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "generic-HTTP",
+    "generic-CLI"
+  ],
+  "install": {
+    "kind": "service",
+    "runtime": "docker",
+    "docker": {
+      "image": "ghcr.io/shadowharness/dkg-review-ledger",
+      "version": "v0.1.3",
+      "digest": "sha256:0c82a9ae7eb337ef5c4b3103d5583b3fe20a02bf34c38bec450e91ee763292f1"
+    },
+    "envRequired": [
+      "DKG_API_URL",
+      "DKG_AGENT_FILE",
+      "REPOSITORIES",
+      "SERVICE_AUTH_TOKEN"
+    ],
+    "portsOpened": [
+      8080
+    ]
+  },
+  "security": {
+    "networkEgress": [
+      "api.github.com",
+      "*"
+    ],
+    "writeAuthority": [
+      "POST /api/agent/register (one-time operator-authorized onboarding; scoped application credential saved privately)",
+      "POST /api/context-graph/create (local Context Graph; register:false)",
+      "POST /api/knowledge-assets (WM draft; no automatic SHARE or PUBLISH)",
+      "POST /api/knowledge-assets/{name}/wm/write (known draft reconciliation)",
+      "POST /api/knowledge-assets/{name}/swm/share (SHARE; Curator-authority; awaitCuratorAck:true)"
+    ],
+    "credentialsHandled": [
+      "GITHUB_TOKEN (optional; public-repository reads only)"
+    ],
+    "notes": "The networkEgress wildcard covers only the exact optional operator-configured HTTPS DKG_API_URL origin; the default DKG node is local. Source-provided URLs and redirects are never followed. GitHub access is read-only and restricted to configured public repositories. Runtime uses the registered agent credential in DKG_AGENT_FILE (or an agent-scoped DKG_AUTH_TOKEN). The registration helper uses a separate node-operator token only for initial onboarding, then verifies and reuses the saved agent identity. Service readiness verifies the configured agent against the node. Other runtime credentials come from the environment and are never stored in the replay journal or sent to the browser. State changes require the operator's SERVICE_AUTH_TOKEN. Sync writes only Working Memory; an agent/operator must select an exact snapshot and digest for SHARE. The node owns Curator authorization and sealing, followed by lifecycle and Shared Memory digest readback. No PUBLISH, staking, endorsement or voting is implemented. The application has zero third-party runtime npm dependencies and no install lifecycle hooks. The separate DKG node is operator-managed. Container releases include SBOM and signed GitHub build provenance bound to the pinned source and digest. See SECURITY.md and docs/VERIFICATION.md at the pinned commit. Shared-project selection uses the reader's own scoped credential and is restricted to Shared Memory read operations; registered agent identity is verified against the node. The dedicated public deployment retains original snapshot digests and observation times after application restart."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/shadowharness/dkg-review-ledger/blob/6010429329fe819ca13f3126422dd3a69628f1f1/DESIGN.md",
+  "demo": "https://shadowharness.com/demos/dkg-review-ledger/",
+  "promotionPath": "The immutable snapshot digest, source links, exact head/base commits, named Knowledge Asset and ordered RDF chunks provide stable inputs for later Curator-controlled PUBLISH into Verifiable Memory. A future adapter can attach canonical UAL and anchoring/attestation evidence while preserving the source packet. Context oracles should consume commit correspondence, source timing and memory trust state together. This release implements Working and Shared Memory; chain publication and oracle settlement are documented future stages.",
+  "fitNotes": "Engineering agents retrieve complete source-linked review and CI evidence across sessions, preserve immutable observations when a branch advances, and explicitly SHARE a selected packet for team reuse. A separately registered reader uses its own scoped credential and --shared-owner for Shared Memory reads of the writer project. The first user is the ShadowHarness project, whose Sidera permanent memory infrastructure supports sustained autonomous engineering and verified task handoffs. The standard CLI and authenticated HTTP routes are the entry points, with a read-only live inspection surface. Maintainer @shadowharness commits to at least six months of post-acceptance support in MAINTENANCE.md."
+}
