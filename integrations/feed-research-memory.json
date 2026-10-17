@@ -1,0 +1,55 @@
+{
+  "$schema": "https://raw.githubusercontent.com/OriginTrail/dkg-integrations/d4e575a2e5d5861d319beb03811dd726249bd9fe/schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "feed-research-memory",
+  "name": "Feed Research Memory",
+  "description": "An RSS/Atom research inbox that writes local feed snapshots to DKG Working Memory, tracks source revisions and observations, and lets agents annotate evidence and recall research packets with exact-version citations.",
+  "category": [
+    "ingestion",
+    "working-memory",
+    "research"
+  ],
+  "maintainer": {
+    "github": "@dcftradingcrypt",
+    "name": "dcftradingcrypt"
+  },
+  "repo": "https://github.com/dcftradingcrypt/feed-research-memory",
+  "commit": "91c24feea6752d544d877831176addc54f69944b",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": "10.0.24",
+  "memoryLayers": [
+    "WM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "KnowledgeAsset",
+    "Assertion"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "generic-CLI"
+  ],
+  "install": {
+    "kind": "manual",
+    "docsUrl": "https://github.com/dcftradingcrypt/feed-research-memory/blob/91c24feea6752d544d877831176addc54f69944b/CONTAINER.md",
+    "oneLiner": "docker run --rm ghcr.io/dcftradingcrypt/feed-research-memory@sha256:b7f805ce43d0c45b21591ea170902eb30221f6f88cae3523c30d228258014903 --help"
+  },
+  "security": {
+    "networkEgress": [
+      "Operator-configured DKG_API_URL HTTP(S) origin if remote; loopback by default"
+    ],
+    "writeAuthority": [
+      "POST /api/context-graph/create",
+      "POST /api/knowledge-assets"
+    ],
+    "credentialsHandled": [],
+    "notes": "Runtime contacts only the operator-selected DKG HTTP(S) API origin; the default is http://127.0.0.1:9200. DKG_API_URL can name a remote node, so this configurable-origin egress is declared explicitly. The handled DKG_AUTH_TOKEN bearer credential is sent only to that configured origin; redirects are rejected. Graph creation sets register:false and KA creation sets finalize:false. The CLI reads local XML and never fetches feed/article URLs or vocabulary IRIs. No third-party credential prompt, install hook, telemetry, remote code loading, financial key access, author attestation, finalize, SHARE, PUBLISH or graph registration. Reads use GET /api/knowledge-assets/{name}, GET /api/knowledge-assets/{name}/wm/quads and POST /api/query scoped to the caller's working-memory view. Source, observation, annotation and packet records are open WM drafts; application URNs and assertionUri values are not claimed as finalized/published UALs. The local real-daemon proof used published DKG10.0.24, real HTTP routes and Oxigraph WM storage, a mock chain and an outside-package transport-only isolation harness. The integration package does not import internal DKG modules or patch the node. No stock P2P, live-chain or SWM replication claim. Maintainer @dcftradingcrypt commits to at least six months of support after the registry PR merges. Implementation, documentation and tests are AI-assisted; the submitting maintainer takes responsibility for this submission."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/dcftradingcrypt/feed-research-memory/blob/91c24feea6752d544d877831176addc54f69944b/DESIGN.md",
+  "demo": "https://dcftradingcrypt.github.io/feed-research-memory/demo/replay.html",
+  "promotionPath": "The implemented records remain in Working Memory. A future authorized Curator workflow can review a research packet and its complete cited source/annotation closure, then explicitly finalize and SHARE through supported node lifecycle operations while preserving revision references and recording actual lifecycle/UAL references returned by the node. Verifiable Memory publication would require a separate approved signer, authority and publication budget; it is not performed by this CLI. Downstream context oracles could consume the resulting packet's exact citations and real promoted UALs only after applying freshness and verification-grade policy; the current WM packet is draft research input.",
+  "fitNotes": "Published distribution: GHCR OCI package ghcr.io/dcftradingcrypt/feed-research-memory:0.1.0, pinned to sha256:b7f805ce43d0c45b21591ea170902eb30221f6f88cae3523c30d228258014903; published build attestation https://github.com/dcftradingcrypt/feed-research-memory/attestations/56953284. This is submitted under the bounty section8a.1 equivalent-verifiable-registry option; committee acceptance is not assumed. Agents use a one-shot CLI to import RSS2.0/Atom1.0 snapshots, triage exact source versions, write attributed notes, bind a question/answer to precise revision digests and recall that evidence in a later session. Causal observation events preserve A-to-B-to-A source reversion without duplicating source records; unchanged consecutive imports add no source or observation. Local verification includes a real-node fictional-fixture walkthrough and an independent twenty-item snapshot from the official Node.js blog feed. This is a general local-feed research workflow, adjacent to but distinct from the arXiv search/select importer in registry PR6. No production adoption, award or payment is claimed."
+}
