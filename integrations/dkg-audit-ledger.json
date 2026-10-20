@@ -1,0 +1,41 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "dkg-audit-ledger",
+  "name": "DKG Audit Ledger",
+  "description": "Autonomous code audit and security verification memory for AI agents in OriginTrail DKG V10. Captures test runs, lint status, and vulnerability scans into verifiable RDF Knowledge Assets in Working Memory, sealed with Merkle roots for Shared Working Memory consensus.",
+  "category": ["audit", "security", "code-review", "working-memory", "shared-memory"],
+  "maintainer": {
+    "github": "@dextermos-dev",
+    "name": "Dexter Mos (BountyHunterAI)",
+    "contact": "dextermos.dev@gmail.com"
+  },
+  "repo": "https://github.com/dextermos-dev/dkg-audit-ledger",
+  "commit": "751d33597b12e1265e907c48d945507e989ac185",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "memoryLayers": ["WM", "SWM"],
+  "v10PrimitivesUsed": ["ContextGraph", "KnowledgeAsset", "Assertion"],
+  "publicInterfacesUsed": ["http-api"],
+  "targetAgents": ["Cursor", "Claude Code", "Claude Desktop", "generic-MCP", "generic-HTTP", "generic-CLI"],
+  "install": {
+    "kind": "manual",
+    "docsUrl": "https://github.com/dextermos-dev/dkg-audit-ledger/blob/main/README.md",
+    "oneLiner": "Clone the zero-dependency repository (Node >=20.0), configure DKG_API_URL (defaults to 127.0.0.1:9200), and run CLI commands or wire into Cursor / Claude Code via the included JSON-RPC MCP server in bin/cli.js."
+  },
+  "security": {
+    "networkEgress": [],
+    "writeAuthority": [
+      "POST /api/knowledge-assets",
+      "POST /api/knowledge-assets/{name}/wm/write",
+      "POST /api/knowledge-assets/{name}/swm/share"
+    ],
+    "credentialsHandled": [],
+    "notes": "No third-party credentials or API keys handled. Connects exclusively to the local DKG node (http://127.0.0.1:9200) via its public HTTP API; zero external network egress. Built-in automated secret redaction intercepts and scrubs private keys (0x...), GitHub tokens (ghp_...), and credentials before assembling RDF quads. Writes exclusively to Working Memory (private per-agent scratchpad) and seals into Shared Working Memory (SWM) for peer-agent consensus. Does NOT perform automated Verifiable Memory (VM) publish operations (vm/publish is strictly human-gated). Contains no preinstall, install, or postinstall lifecycle scripts."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/dextermos-dev/dkg-audit-ledger/blob/main/docs/DESIGN.md",
+  "demo": "https://github.com/dextermos-dev/dkg-audit-ledger/blob/main/docs/demo-transcript.txt",
+  "promotionPath": "Raw audit assertions (unit test outputs, lint results, AST diff hashes) are assembled into deterministic RDF quads with zero-dependency secret redaction and written to DKG Working Memory (WM) via POST /api/knowledge-assets/{name}/wm/write. Once the agent audit cycle concludes, the audit assertion is cryptographically sealed via Merkle root hashing and shared to Shared Working Memory (SWM) via POST /api/knowledge-assets/{name}/swm/share for peer-agent review. Verifiable Memory (VM) publication is strictly human-gated and targeted for on-chain anchoring on NeuroWeb / Base L2 once peer consensus is achieved.",
+  "fitNotes": "Directly advances the DKG v10 vision of collaborative multi-agent memory and LLM-Wiki / autoresearch by providing an immutable, tamper-proof audit trail for automated coding agents. AI agents running in Cursor or Claude Code can verify code quality, trace test provenance, and reach consensus before code commits, binding the settlement wallet 0x8366bCe3a2D379Dec7656D7A67015789FaF999f20 directly to verified audit runs."
+}
