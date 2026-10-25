@@ -1,0 +1,64 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "dkg-arxiv-autoresearch",
+  "name": "DKG arXiv Autoresearch & LLM-Wiki Ingestor",
+  "description": "Ingests arXiv papers into DKG v10 Working Memory as W3C PROV-O JSON-LD assertions with SHA-256 source digests, promotes corroborated claims into Shared Working Memory within a bound Context Graph, and runs grounded SPARQL retrieval for LLM-Wiki agents.",
+  "category": [
+    "autoresearch",
+    "llm-wiki",
+    "ingestion",
+    "provenance",
+    "working-memory"
+  ],
+  "maintainer": {
+    "github": "@xaductrung-rgb",
+    "name": "Xa Duc Trung",
+    "contact": "xaductrung@gmail.com"
+  },
+  "repo": "https://github.com/xaductrung-rgb/dkg-arxiv-autoresearch",
+  "commit": "71ddafb1e772a338a5b442bad93de8e645def77e",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "memoryLayers": [
+    "WM",
+    "SWM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "Assertion",
+    "SubGraph",
+    "Entity"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "autoresearch",
+    "generic-CLI",
+    "generic-HTTP"
+  ],
+  "install": {
+    "kind": "manual",
+    "docsUrl": "https://github.com/xaductrung-rgb/dkg-arxiv-autoresearch/blob/main/README.md",
+    "oneLiner": "Clone https://github.com/xaductrung-rgb/dkg-arxiv-autoresearch (Node >=22, zero external dependencies), set DKG_API_URL and DKG_AUTH_TOKEN for your local DKG v10 node, and run `node ./bin/cli.mjs ingest <arxivId>` followed by `node ./bin/cli.mjs promote <assertionName>`."
+  },
+  "security": {
+    "networkEgress": [
+      "export.arxiv.org (HTTPS GET /api/query): read-only public arXiv Atom API to fetch paper metadata and abstracts. No telemetry."
+    ],
+    "writeAuthority": [
+      "POST /api/context-graph/create",
+      "POST /api/assertion/create",
+      "POST /api/assertion/{name}/write",
+      "POST /api/assertion/{name}/promote (Shared Working Memory promotion within the bound Context Graph)"
+    ],
+    "credentialsHandled": [],
+    "notes": "Talks only to the public read-only arXiv metadata API (export.arxiv.org) and the local DKG v10 node HTTP API on DKG_API_URL. Writes candidate literature assertions to Working Memory (WM) and promotes corroborated assertions to Shared Working Memory (SWM) on explicit operator/agent command (`promote`). Never calls Verifiable Memory publish/endorse/verify operations. Pure Node >=22 ESM package with zero npm dependencies and no preinstall/install/postinstall scripts."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/xaductrung-rgb/dkg-arxiv-autoresearch/blob/main/DESIGN.md",
+  "demo": "https://github.com/xaductrung-rgb/dkg-arxiv-autoresearch/blob/main/docs/acceptance-transcript.md",
+  "promotionPath": "Raw arXiv metadata and extracted atomic claims (schema:Claim) are first written as a W3C PROV-O Bundle into private Working Memory (POST /api/assertion/create + POST /api/assertion/{name}/write) with a deterministic SHA-256 source digest (dkg:sourceDigestSha256). Once corroborated across multiple papers or verified by a research agent, the assertion is promoted to Shared Working Memory (POST /api/assertion/{name}/promote) in the bound Context Graph. Because every SWM assertion preserves explicit prov:wasDerivedFrom links to urn:dkg:autoresearch:paper:<arxivId> and deterministic content hashes, downstream Curators and context oracles can promote matured literature clusters directly into Verified Memory (VM) Knowledge Assets without re-parsing unstructured text.",
+  "fitNotes": "Directly targets the LLM-Wiki / autoresearch direction (Section 9, criterion 1) by turning scientific literature streams into provenance-grounded Working and Shared Working Memory graphs that prevent unverified hallucination pollution in collaborative agent wikis."
+}
