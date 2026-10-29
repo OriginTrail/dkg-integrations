@@ -1,0 +1,70 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "dkg-memory-mcp",
+  "name": "DKG Memory MCP Server",
+  "description": "MCP (Model Context Protocol) server exposing DKG V10 memory (Working and Shared Memory in Round 1) as MCP tools, so any MCP-capable client can read, write, share and query DKG memory without custom HTTP wiring.",
+  "license": "Apache-2.0",
+  "repo": "https://github.com/kiyeps/dkg-memory-mcp",
+  "commit": "3e3b318cef54fe4e98d259b4f4ad97ec825d246c",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "category": [
+    "agent-memory",
+    "mcp"
+  ],
+  "memoryLayers": [
+    "WM",
+    "SWM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "KnowledgeAsset",
+    "Assertion"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "generic-MCP",
+    "Claude Desktop",
+    "Cursor",
+    "OpenClaw",
+    "Hermes",
+    "generic-CLI"
+  ],
+  "trustTier": "community",
+  "install": {
+    "kind": "mcp",
+    "command": "npx",
+    "args": [
+      "-y",
+      "dkg-memory-mcp@1.0.2"
+    ],
+    "envRequired": [
+      "DKG_API_URL",
+      "DKG_AUTH_TOKEN"
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "claude-code"
+    ]
+  },
+  "security": {
+    "writeAuthority": [
+      "POST /api/knowledge-assets",
+      "POST /api/knowledge-assets/{name}/swm/share"
+    ],
+    "networkEgress": [],
+    "notes": "Write authority limited to Working Memory writes and SWM share (seals by default). No Verifiable Memory publish tool is exposed in Round 1 scope; VM promotion requires an explicit human-gated CLI action in a later round. Secret redaction applied before any literal leaves the process. No external network egress: the only host contacted is the DKG node it is installed against (127.0.0.1 by default), which the registry contract does not count as egress."
+  },
+  "maintainer": {
+    "github": "@kiyeps",
+    "name": "kiyeps",
+    "contact": "https://github.com/kiyeps"
+  },
+  "promotionPath": "WM -> SWM (seals by default, publish-ready) -> VM (later round, explicit human CLI gate only)",
+  "fitNotes": "Transport-agnostic MCP tooling layer exposing DKG memory as standard MCP tools. Round 1 scope: WM + SWM only. No vm/publish tool exposed (Verifiable Memory is a later round and requires an explicit human-gated publish). No UI endorsement/voting tools (disallowed by bounty rules). Secret redaction applied before any literal leaves the process. Smoke-tested live against a DKG V10 node (Base Sepolia testnet): KA create -> WM write -> SPARQL recall verified end-to-end.",
+  "demo": "https://github.com/kiyeps/dkg-memory-mcp/blob/main/docs/demo.gif",
+  "designBrief": "https://github.com/kiyeps/dkg-memory-mcp/blob/main/docs/DESIGN.md"
+}
