@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "0.1.0",
+  "slug": "dkg-rag-pipeline",
+  "name": "DKG RAG Pipeline",
+  "description": "RAG pipeline using DKG V10 Working/Shared Memory as vector-searchable retrieval source with provenance citations. Ingests documents as Knowledge Assets, indexes with local embeddings, and serves ranked chunks to any LLM for grounded generation.",
+  "category": [
+    "infra",
+    "rag"
+  ],
+  "maintainer": {
+    "github": "@kiyeps",
+    "name": "kiyeps",
+    "contact": "https://github.com/kiyeps"
+  },
+  "repo": "https://github.com/kiyeps/dkg-rag-pipeline",
+  "commit": "3f4ab349f1512e1a63d98889ab112bd5db9171c1",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "memoryLayers": [
+    "WM",
+    "SWM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "KnowledgeAsset",
+    "Assertion"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "generic-CLI",
+    "OpenClaw",
+    "Hermes"
+  ],
+  "install": {
+    "kind": "cli",
+    "package": "dkg-rag-pipeline",
+    "version": "0.1.3",
+    "binary": "dkg-rag",
+    "usageHint": "dkg-rag ingest <file> && dkg-rag query <text> && dkg-rag share <ka> && dkg-rag serve"
+  },
+  "security": {
+    "writeAuthority": [
+      "POST /api/knowledge-assets",
+      "POST /api/knowledge-assets/{name}/wm/write",
+      "POST /api/knowledge-assets/{name}/wm/finalize",
+      "POST /api/knowledge-assets/{name}/swm/share"
+    ],
+    "networkEgress": [
+      "*"
+    ],
+    "notes": "Egress: no external host by default (local hash-bucket embedding). Declared \"*\" because embedding and generation destinations are operator-configured: EMBEDDING_API_URL (with EMBEDDING_API_KEY/EMBEDDING_MODEL) and LLM_ENDPOINT. Non-loopback destinations must be https; embedding calls additionally require DKG_ALLOW_REMOTE_ENDPOINT=1. The DKG auth token is sent only to the DKG node, never to embedding or LLM endpoints, and prompts are redacted before leaving the process. Secret redaction gate scans all text and quads before any write or provider call. Auth token from ~/.dkg/auth.token or env; request bodies capped at 1 MiB (invalid cap values fall back to the documented default). Zero runtime dependencies."
+  },
+  "trustTier": "community",
+  "promotionPath": "Ingested documents land in Working Memory as provenance-tagged Knowledge Assets. 'dkg-rag share <ka>' promotes a document to Shared Working Memory (swm/share seals by default, publish-ready). No automatic promotion and no daemon; VM publishing is not implemented in Round 1.",
+  "fitNotes": "WM/SWM as RAG retrieval source directly serves the LLM-Wiki/Autoresearch theme. Distinct from OpenClaw memory curator (agent-specific daemon), DKG Memory MCP server (transport layer), and Hermes bridge (agent audit trail). This is an infra/retrieval layer usable by any agent or application.",
+  "$schema": "../schema/integration.schema.json",
+  "demo": "https://github.com/kiyeps/dkg-rag-pipeline/blob/main/docs/demo.gif",
+  "designBrief": "https://github.com/kiyeps/dkg-rag-pipeline/blob/main/docs/DESIGN.md"
+}
