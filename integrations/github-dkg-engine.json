@@ -1,0 +1,80 @@
+{
+  "$schema": "../schema/integration.schema.json",
+  "schemaVersion": "0.1.0",
+  "slug": "github-dkg-engine",
+  "name": "GitHub Working Memory & Decision Engine",
+  "description": "Enterprise GitHub integration synthesizing pull requests and code reviews into W3C PROV-O tri-modal knowledge assets across DKG v10 Working Memory and Shared Working Memory.",
+  "category": [
+    "github",
+    "working-memory",
+    "shared-memory",
+    "mcp",
+    "provenance"
+  ],
+  "maintainer": {
+    "github": "@buildwithpnj",
+    "name": "Prakash N. Jha",
+    "contact": "callmepnj@gmail.com"
+  },
+  "repo": "https://github.com/buildwithpnj/github-dkg-engine",
+  "commit": "a0939fd1f9a481284e0a98725884319771adcb3b",
+  "license": "Apache-2.0",
+  "requiresDkgNodeVersion": ">=10.0.0",
+  "memoryLayers": [
+    "WM",
+    "SWM"
+  ],
+  "v10PrimitivesUsed": [
+    "ContextGraph",
+    "Assertion",
+    "Curator"
+  ],
+  "publicInterfacesUsed": [
+    "http-api"
+  ],
+  "targetAgents": [
+    "Claude Code",
+    "Cursor",
+    "OpenClaw",
+    "generic-MCP"
+  ],
+  "install": {
+    "kind": "mcp",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@buildwithpnj/github-dkg-engine@0.1.0",
+      "mcp"
+    ],
+    "envRequired": [
+      "GITHUB_TOKEN",
+      "DKG_API_URL"
+    ],
+    "supportedClients": [
+      "cursor",
+      "claude-code",
+      "claude-desktop",
+      "dkg-node"
+    ]
+  },
+  "security": {
+    "networkEgress": [
+      "api.github.com",
+      "localhost:9200"
+    ],
+    "writeAuthority": [
+      "POST /api/context-graph/create",
+      "POST /api/memory/turn",
+      "POST /api/assertion/{name}/promote"
+    ],
+    "credentialsHandled": [
+      "GITHUB_TOKEN"
+    ],
+    "notes": "Zero third-party network egress beyond official api.github.com and the local DKG v10 node. Ingests GitHub PRs, issues, and code reviews into Working Memory turns with automated regex credential scrubbing. Evaluates architecture decision records through a Curator Gate with SHA-256 integrity digests before executing promotions to Shared Working Memory via POST /api/assertion/{name}/promote. Zero preinstall/postinstall hooks in npm distribution."
+  },
+  "trustTier": "community",
+  "designBrief": "https://github.com/buildwithpnj/github-dkg-engine/blob/main/DESIGN_BRIEF.md",
+  "demo": "https://github.com/buildwithpnj/github-dkg-engine#walkthrough",
+  "promotionPath": "Working Memory turns capture real-time PR and issue assertions. High-signal architectural decision records (ADRs) are evaluated by the Curator Gate and promoted to Shared Working Memory. In Round 2, SWM consensus assertions will be signed and published to Verifiable Memory on-chain.",
+  "fitNotes": "Empowers multi-agent autonomous engineering swarms (Claude Code, Cursor, OpenClaw) with shared architectural memory and W3C PROV-O provenance, preventing duplicate bug fixes and maintaining repo invariants across independent agent sessions."
+}
